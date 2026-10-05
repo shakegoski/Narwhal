@@ -1,0 +1,441 @@
+---
+title: "Group 2 — Risk factors"
+subtitle: "Studio wall"
+author: "Siva, Shaariq and Taniska"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+code-tools: true
+---
+
+# Spine
+
+> How do bodies carry risk, how do class and smoke talk, and where do children still die young?
+
+# Introduction — the tables we own
+
+This folder is ours for the ten days. Three tables, three shapes.
+
+- **Panel A** (`panel-A.csv`) — `cardioRiskFactors`: BMI, lipids, blood pressure, uric acid. `sex` and `smok` have already been recoded from integers to factors.
+- **Panel B** (`panel-B.csv`) — Scottish Health Survey 1998: sex, social class, smoking, diagnosed CVD. `area` is a code, not a map.
+- **Panel C** (`panel-C.csv`) — SOWC child / infant / neonatal mortality by country. Join by country name.
+
+If a brick needs a histogram, it lives in A. If it needs a mosaic, it lives in B.
+
+```{r}
+#| label: setup
+#| message: false # keeps rendered Quarto less noisy
+
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+
+A <- read_csv("data/panel-A.csv")
+B <- read_csv("data/panel-B.csv")
+```
+
+# Panel A — body / measure
+
+> *bmi, choles, sys, dia, Uric are Quant. Do not average `smok`.*
+
+### 1. See the table
+
+```{r}
+#| label: inspect-panel-A-data-1
+
+# glimpse() / inspect() / skim()
+dplyr::glimpse(A)
+```
+
+Our Panel-A data has:
+
+- 998 observations and 14 variables. One case = one person, measured once.
+- `age`: Quantitative, numeric
+- `bmi`: Quantitative, numeric
+- `waisthip`: Quantitative, numeric
+- `smok`: Qualitative, categorical. Encoded `<chr>`, to be mutated
+- `choles`: Quantitative, numeric
+- `trig`: Quantitative, numeric
+- `hdl`: Quantitative, numeric
+- `ldl`: Quantitative, numeric
+- `sys`: Quantitative, numeric
+- `dia`: Quantitative, numeric
+- `Uric`: Quantitative, numeric
+- `sex`: Qualitative, categorical. Encoded `<chr>`, to be mutated
+- `alco`: Quantitative, numeric
+- `apoa`: Quantitative, numeric
+
+```{r}
+#| label: point-at-a-row
+
+A |> slice(1)
+```
+
+Row 1 is one person: a 52-year-old woman who doesn't smoke or drink, with a BMI of 36.9 and blood pressure of 154/89.
+
+```{r}
+#| label: inspect-panel-A-data-2
+
+# glimpse() / inspect() / skim()
+skimr::skim(A)
+```
+
+On the Qual variables, panel-A data has:
+
+- `sex` has 2 levels: "female" (524) and "male" (474)
+- `smok` has 2 levels: "non_smoker" (775) and "smoker" (223)
+- The split inside `sex` is very uneven: only **36 women smoke** (vs 488 who don't), while **187 men smoke** (vs 287 who don't)
+
+```{r}
+#| label: qual-counts
+
+mosaic::tally(~ sex, data = A)
+mosaic::tally(~ smok, data = A)
+mosaic::tally(smok ~ sex, data = A) # counts of smok inside each sex
+```
+
+On the Quant variables, panel-A data has:
+
+- `age`: mean 44.6, sd 11.5, median 45, min 25, max 64. Pretty flat, no skew.
+- `bmi`: mean 25.8, sd 5.3, median 25.1, min 14.8, max 48.6. Skewed right.
+- `hdl`: mean 1.54, sd 0.45, median 1.48. Slightly skewed right.
+- `ldl`: mean 3.45, sd 1.22, median 3.42. Close to symmetric.
+- `sys`: mean 135.9, sd 23.9, median 132, max 245. Skewed right.
+- `Uric`, `trig`, `alco`: very skewed right with a long tail (`Uric` goes up to 1885).
+- `alco`: **721 of 998 people have 0**, so most people don't drink at all.
+
+There is no missing data.
+
+```{r}
+#| label: mutate-A-factors
+
+A_mod <- A |> mutate(sex = as.factor(sex), smok = as.factor(smok))
+
+glimpse(A_mod)
+```
+
+A few helper columns for later bricks. These are **cut-offs we chose**, not columns in the data: "high bp" is `sys >= 140` or `dia >= 90`, "obese" is `bmi >= 30`, "drinker" is `alco > 0`.
+
+```{r}
+#| label: helper-columns
+
+A_flag <- A_mod |>
+  mutate(
+    high_bp = (sys >= 140 | dia >= 90),
+    obese   = (bmi >= 30),
+    drinker = (alco > 0)
+  )
+
+A_flag |> summarise(
+  pct_high_bp = mean(high_bp),
+  pct_obese   = mean(obese),
+  n_nondrinkers = sum(!drinker)
+)
+```
+
+Findings from this look:
+
+1.  524 women and 474 men; 775 non-smokers and 223 smokers (only 36 women smoke, compared to 187 men).
+2.  Most people don't drink: 721 of 998.
+3.  48% of people have high blood pressure.
+4.  20% of people are obese (`bmi >= 30`).
+
+### 2. Ask
+
+Based on the spine, these are our questions:
+
+Possibly can answer:
+
+1.  Are women and men affected differently? Do they carry risk in different ways?
+2.  Is `waisthip` a better match for risk markers than `bmi`? (Where you carry weight vs how much.)
+3.  Do smokers and non-smokers have different `hdl` and `ldl` levels, for men and for women? Is the pattern still there for non-drinkers? (Main Character Question)
+
+Possibly cannot answer:
+
+1.  How much smoking matters. (No dose or duration of smoking, just smoker / non-smoker.)
+2.  Did any of these people get heart disease? (No outcome column, so we can't tell whether a "high" value actually leads to heart disease.)
+
+### 3. Choose a mark
+
+1.  Bar chart for the Qual counts (`sex`, `smok`), no histograms for these.
+2.  Histograms for single Quant variables (`age`, `bmi`, `sys`, `alco`, ...)
+3.  Scatter + straight-line smoother for Quant + Quant (`sys ~ age`, `sys ~ waisthip`, `sys ~ bmi`, `hdl ~ trig`, `hdl ~ alco`), with a correlation number to back it up
+4.  Violins for Quant + Qual (2 levels): body measures by `sex`, and `hdl` / `ldl` by `smok`, split by `sex`
+5.  Density plot to see `hdl` and `ldl` side by side in one chart
+6.  Two-sample test for means beside the matching violin
+
+### 4. Predict
+
+1.  **Question 1:** Men will carry more weight around the middle (`waisthip`), even if women have the higher `bmi`.
+2.  **Question 2:** `waisthip` will line up with blood pressure and uric acid more closely than `bmi` does.
+3.  **Question 3 (Main Character):** Smokers will have worse cholesterol: lower `hdl` and higher `ldl` than non-smokers.
+
+### 5. Make
+
+These are the charts we used to explore the data. They don't show up in the render, but they helped us decide what to look at next.
+
+```{r}
+#| label: panelA-charts-I-want-to-see-but-not-show-1
+#| eval: false
+#| echo: true # Include the code, but don't compute in render
+
+## Qual counts
+A_mod |> gf_bar(~ sex)
+A_mod |> gf_bar(~ smok)
+A_mod |> gf_bar(~ smok, fill = ~ sex)
+
+## Quant shapes
+A_mod |> gf_histogram(~ age)
+A_mod |> gf_histogram(~ bmi)
+A_mod |> gf_histogram(~ sys)
+A_mod |> gf_histogram(~ Uric)
+A_mod |> gf_histogram(~ alco)
+```
+
+**Question 1: do women and men carry risk differently?**
+
+```{r}
+#| label: women-vs-men
+
+A_mod |> gf_violin(bmi ~ sex, fill = ~ sex) |>
+  gf_labs(title = "Women have the higher BMI...", x = NULL)
+A_mod |> gf_violin(waisthip ~ sex, fill = ~ sex) |>
+  gf_labs(title = "...but men carry more weight around the middle", x = NULL)
+A_mod |> gf_violin(sys ~ sex, fill = ~ sex) |>
+  gf_labs(title = "Men have higher blood pressure", x = NULL, y = "Systolic BP (mmHg)")
+A_mod |> gf_violin(Uric ~ sex, fill = ~ sex) |>
+  gf_labs(title = "Men have much higher uric acid", x = NULL, y = "Uric acid")
+```
+
+Prediction was right: women have higher `bmi`, men have higher `waisthip`, blood pressure and `Uric`.
+
+Blood pressure rises with age:
+
+```{r}
+#| label: bp-age
+
+A_mod |> gf_point(sys ~ age) |> gf_smooth(method = "lm") |>
+  gf_labs(title = "Blood pressure goes up with age", y = "Systolic BP (mmHg)")
+```
+
+**Question 2: where you carry weight (`waisthip`) vs how much (`bmi`)**
+
+```{r}
+#| label: waisthip-vs-bmi
+
+A_mod |> gf_point(sys ~ waisthip) |> gf_smooth(method = "lm")
+A_mod |> gf_point(sys ~ bmi) |> gf_smooth(method = "lm")
+
+A_mod |> gf_point(Uric ~ waisthip) |> gf_smooth(method = "lm")
+A_mod |> gf_point(Uric ~ bmi) |> gf_smooth(method = "lm")
+
+A_mod |> gf_point(trig ~ waisthip) |> gf_smooth(method = "lm")
+A_mod |> gf_point(trig ~ bmi) |> gf_smooth(method = "lm")
+
+# put numbers on it
+cor(sys ~ waisthip, data = A_mod)
+cor(sys ~ bmi, data = A_mod)
+cor(Uric ~ waisthip, data = A_mod)
+cor(Uric ~ bmi, data = A_mod)
+cor(trig ~ waisthip, data = A_mod)
+cor(trig ~ bmi, data = A_mod)
+```
+
+`waisthip` wins every time: `sys` 0.33 vs 0.21, `Uric` 0.49 vs 0.11, `trig` 0.39 vs 0.22.
+
+More triglycerides, less HDL:
+
+```{r}
+#| label: trig-hdl
+
+A_mod |> gf_point(hdl ~ trig) |> gf_smooth(method = "lm") |>
+  gf_labs(title = "More triglycerides, less good cholesterol")
+```
+
+Drinkers have higher uric acid:
+
+```{r}
+#| label: drinkers-uric
+
+A_flag |> gf_violin(Uric ~ drinker, fill = ~ drinker) |>
+  gf_labs(title = "Drinkers have higher uric acid", x = "Drinks alcohol?")
+A_flag |> group_by(drinker) |> summarise(mean_Uric = mean(Uric), n = n())
+```
+
+**Question 3 (Main Character): smokers and cholesterol, men and women separately**
+
+Human brick first: our own starting chart, before any AI.
+
+```{r}
+#| label: panel-A-human-brick
+#| eval: false
+#| echo: true
+
+# Our first attempt: HDL and LDL as two separate graphs
+A_mod |> gf_histogram(~ hdl, fill = ~ smok, position = "dodge", bins = 25) |> gf_facet_wrap(~ factor(sex))
+A_mod |> gf_histogram(~ ldl, fill = ~ smok, position = "dodge", bins = 25) |> gf_facet_wrap(~ factor(sex))
+```
+
+Problem: two separate graphs, so it's hard to compare HDL and LDL side by side.
+
+```{r}
+#| label: panel-A-ai-prompt
+#| eval: false
+#| echo: true
+
+# ## Prompt we actually used
+# "how can I plot these 2 graphs together so I can analyse both hdl and ldl side by side"
+
+# ai_draft
+A_mod |>
+  pivot_longer(c(hdl, ldl), names_to = "cholesterol", values_to = "level") |>
+  gf_density(~ level, fill = ~ smok, alpha = 0.5) |>
+  gf_facet_grid(cholesterol ~ factor(sex))
+
+# ours
+# kept pivot_longer() + gf_facet_grid(), tried it as a histogram first,
+# switched to density because the groups are really uneven (36 vs 488 women),
+# added a title + caption
+```
+
+```{r}
+#| label: panel-A-hdl-ldl-together
+
+A_mod |>
+  pivot_longer(c(hdl, ldl), names_to = "cholesterol", values_to = "level") |>
+  gf_density(~ level, fill = ~ smok, alpha = 0.5) |>
+  gf_facet_grid(cholesterol ~ sex) |>
+  gf_labs(
+    title = "Male smokers have more good cholesterol and less bad; women barely differ",
+    caption = "Panel A, cardioRiskFactors (n = 998). Only 36 women smoke.",
+    x = "Cholesterol (mmol/L)"
+  )
+```
+
+The same comparison as violins, with the group means:
+
+```{r}
+#| label: panel-A-Main-Character-question
+
+A_mod |> gf_violin(hdl ~ smok, fill = ~ smok) |> gf_facet_grid(~ sex) |>
+  gf_labs(title = "Male smokers have higher good cholesterol (HDL)", x = NULL,
+          caption = "Only 36 women smoke, so the female smoker violin is thin on data.")
+A_mod |> gf_violin(ldl ~ smok, fill = ~ smok) |> gf_facet_grid(~ sex) |>
+  gf_labs(title = "Male smokers have lower bad cholesterol (LDL)", x = NULL)
+
+A_mod |> group_by(sex, smok) |>
+  summarise(n = n(), mean_hdl = mean(hdl), mean_ldl = mean(ldl), .groups = "drop")
+```
+
+The male smokers stand out: higher `hdl`, lower `ldl`. That's the opposite of what we predicted. What else is different about them? Check drinking:
+
+```{r}
+#| label: male-smokers-drink
+
+A_flag |> filter(sex == "male", smok == "smoker") |>
+  summarise(pct_drinkers = mean(drinker))   # about 68%
+
+A_mod |> gf_point(hdl ~ alco) |> gf_smooth(method = "lm") |>
+  gf_labs(title = "Good cholesterol rises a little with alcohol")
+```
+
+`hdl` rises with `alco`. So is it the smoking, or the drinking riding along with it? Repeat the comparison for **non-drinkers only**:
+
+```{r}
+#| label: non-drinkers-only
+
+A_nd <- A_flag |> filter(!drinker)
+
+A_nd |> gf_violin(hdl ~ smok, fill = ~ smok) |> gf_facet_grid(~ sex) |>
+  gf_labs(title = "Non-drinkers only: male smokers still have higher HDL", x = NULL)
+A_nd |> gf_violin(ldl ~ smok, fill = ~ smok) |> gf_facet_grid(~ sex) |>
+  gf_labs(title = "Non-drinkers only: male smokers still have lower LDL", x = NULL)
+```
+
+Stat test for means, beside the matching violin (men only, since the women smoker group is just 36 people):
+
+```{r}
+#| label: panel-A-stat-test
+
+A_men <- A_mod |> filter(sex == "male")
+
+mosaic::t.test(hdl ~ smok, data = A_men)
+mosaic::t.test(ldl ~ smok, data = A_men)
+
+# and again with non-drinking men only
+A_men_nd <- A_men |> filter(alco == 0)
+
+mosaic::t.test(hdl ~ smok, data = A_men_nd)
+mosaic::t.test(ldl ~ smok, data = A_men_nd)
+```
+
+### 6. Say
+
+1.  Prediction missed. Male smokers have **higher** `hdl` (about 0.24 higher on average) and **lower** `ldl` (about 0.5 lower) than male non-smokers, both p-values far below 0.05.
+2.  The pattern is still there among men who don't drink (`hdl` about 0.23 higher, `ldl` about 0.5 lower), so drinking alone doesn't explain it. Among women the gap is small, and only 36 women smoke.
+3.  Women carry risk differently from men: higher `bmi` in women; higher `waisthip`, blood pressure and `Uric` in men.
+4.  Blood pressure rises with age, and `waisthip` lines up with the risk markers (`Uric`, `trig`, `sys`) more closely than `bmi` does.
+5.  48% of this group has high blood pressure, 20% is obese, and 721 of 998 don't drink.
+
+### 7. Limit
+
+- We can't say how much smoking matters: we only have smoker / non-smoker, no amount or duration.
+- We can't say whether anyone got heart disease. There's no outcome column, so a "high" value can't be turned into "more likely to get heart disease".
+- "High blood pressure", "obese" and "drinker" are cut-offs we chose, not columns in the data.
+- This is one sample of 998 people. Associations here are not causes: a smoker's higher `hdl` is not a reason to smoke.
+- Only 36 women smoke, too few to be sure about women.
+- We don't know who these people are, where they're from, or how they were chosen.
+- `ldl` is calculated from `choles`, `hdl` and `trig`, not measured on its own.
+- Some values are extreme (`dia` up to 172, `Uric` up to 1885).
+- Kit table we refused to abuse: `smok` and `sex` were never averaged or put in a histogram.
+
+
+
+```{r}
+A_mod |> gf_histogram(~dia , fill = ~smok)
+
+A_mod |>  group_by(smok) |> summarize(mean_dia = mean(dia, na.rm = TRUE))
+
+mosaic::t_test(dia ~ smok, data = A_mod)
+```
+
+**Question 4: Is there a significant difference in mean diastolic blood pressure between smokers and non-smokers?**
+
+two sample t-test showed that smokers had a significantly higher mean diastolic blood pressure (M = 90.04) than non-smokers (M = 87.41), t(361.03) = -2.46, p = 0.014. The 95% confidence interval for the difference in means (non-smoker minus smoker) was [-4.74, -0.53], which doesn't include zero. So on average, smokers' diastolic pressure was about 2.6 points higher than non-smokers'. Since p < 0.05, we reject the null hypothesis of no difference.
+
+# Panel B — category / talk
+
+> *smoke × sex, cvd × sc (social class). `area` is forbidden as geography.*
+
+### 1. See the table
+
+```{r}
+#| label: inspect-panel-B-data-1
+
+# glimpse() / inspect() / skim()
+dplyr::glimpse(B)
+```
+
+### 2. Ask
+
+### 3. Choose a mark
+
+### 4. Predict
+
+### 5. Make
+
+### 6. Say
+
+### 7. Limit
+
+# Conclusion
+
+- **The question we will defend in ninety seconds:** Do smokers and non-smokers carry cholesterol differently, and why do male smokers look *healthier*?
+- **What we will not claim:** that smoking is good for cholesterol, or that anything here causes heart disease.
+- **Which lines were human, which were machine:**
+    - Human: the questions (smoking vs cholesterol; how much smoking matters), the predictions, the first HDL/LDL histograms, the sys/dia scatter, using `facet_wrap()` by sex, spotting the "how many cigarettes" limit, the helper columns and cut-offs, the violins and `tally()` counts.
+    - Machine (AI-assisted): the `pivot_longer()` combined chart, the summary numbers in 1. See, the t-tests and the non-drinker check, the extra findings (age/BP, waist-to-hip, trig/HDL), formatting `index.qmd` into the template layout, merging our two drafts into one file.
+- **Limits:** one snapshot, smoking is yes / no only, only 36 female smokers, unknown sampling.
+- **Gift for the steal-this strip:** `pivot_longer()` to put two measures side by side in one faceted chart, and helper columns with cut-offs stated out loud.

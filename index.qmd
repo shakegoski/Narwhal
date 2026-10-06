@@ -391,23 +391,18 @@ mosaic::t.test(ldl ~ smok, data = A_men_nd)
 - Some values are extreme (`dia` up to 172, `Uric` up to 1885).
 - Kit table we refused to abuse: `smok` and `sex` were never averaged or put in a histogram.
 
-
-
 ```{r}
-A_mod |> gf_histogram(~dia , fill = ~smok)
+A_mod |> gf_histogram(~ choles, fill = ~ sex)
 
-A_mod |>  group_by(smok) |> summarize(mean_dia = mean(dia, na.rm = TRUE))
+A_mod |> group_by(sex) |> summarize ( mean_choles = mean(choles, na.rm = T))
+A_mod |> group_by(smok) |> summarize ( mean_choles = mean(choles, na.rm = T))
 
-mosaic::t_test(dia ~ smok, data = A_mod)
+mosaic::t_test(choles ~ sex, data = A_mod)
 ```
-
-**Question 4: Is there a significant difference in mean diastolic blood pressure between smokers and non-smokers?**
-
-two sample t-test showed that smokers had a significantly higher mean diastolic blood pressure (M = 90.04) than non-smokers (M = 87.41), t(361.03) = -2.46, p = 0.014. The 95% confidence interval for the difference in means (non-smoker minus smoker) was [-4.74, -0.53], which doesn't include zero. So on average, smokers' diastolic pressure was about 2.6 points higher than non-smokers'. Since p < 0.05, we reject the null hypothesis of no difference.
 
 # Panel B — category / talk
 
-> *smoke × sex, cvd × sc (social class). `area` is forbidden as geography.*
+> *smoke × sex, cvd × sc (social class). `area` is forbidden as geography. Do not average `sc`.*
 
 ### 1. See the table
 
@@ -418,24 +413,267 @@ two sample t-test showed that smokers had a significantly higher mean diastolic 
 dplyr::glimpse(B)
 ```
 
+Our Panel-B data has:
+
+- 8804 observations and 7 variables. One case = one person in the Scottish Health Survey, 1998.
+- `age`: Quantitative, numeric
+- `sex`: Qualitative, categorical. Encoded `<chr>`, to be mutated
+- `sc`: Qualitative, categorical (social class, based on job). Encoded as numbers `12`, `3`, `45`, but these are **labels, not amounts**. To be mutated
+- `carstair`: Quantitative, numeric (Carstairs deprivation score of the person's **area**; higher = more deprived)
+- `smoke`: Qualitative, categorical. Encoded `<chr>`, to be mutated
+- `area`: Qualitative, a code for where people live. Not a map, not a number
+- `cvd`: Qualitative, categorical (cardiovascular disease, yes / no). Encoded `<chr>`, to be mutated
+
+```{r}
+#| label: point-at-a-row-B
+
+B |> slice(1)
+```
+
+Row 1 is one person: a 50-year-old woman in social class III, who has never smoked, lives in a less deprived area (`carstair` -2.45) and doesn't have CVD.
+
+```{r}
+#| label: inspect-panel-B-data-2
+
+skimr::skim(B)
+```
+
+On the Qual variables, panel-B data has:
+
+- `sex` has 2 levels: "female" (4987) and "male" (3817)
+- `sc` has 3 levels: `12` = classes I–II, the highest (2421), `3` = class III (3686), `45` = classes IV–V, the lowest (2697)
+- `smoke` has 5 levels: "nevr" (3573), "ex" (2151), "lite" (577), "mod" (1270), "hvy" (1233)
+- `cvd` has 2 levels: "no" (6389) and "yes" (2415), so about 27% have CVD
+- `area` has 312 different codes
+
+```{r}
+#| label: qual-counts-B
+
+mosaic::tally(~ sex, data = B)
+mosaic::tally(~ sc, data = B)
+mosaic::tally(~ smoke, data = B)
+mosaic::tally(~ cvd, data = B)
+```
+
+On the Quant variables, panel-B data has:
+
+- `age`: mean 46.2, sd 15.5, median 45, min 18, max 74
+- `carstair`: mean -0.20, sd 3.27, median -0.68, min -6.23, max 12.53. Skewed right.
+- Everyone in the same `area` has the same `carstair`, so it describes the neighbourhood, not the person.
+
+There is no missing data.
+
+```{r}
+#| label: mutate-B-factors
+
+B_mod <- B |>
+  mutate(across(where(is.character), as.factor)) |>
+  mutate(
+    sc = fct_recode(as.factor(sc),
+                    "I-II (high)" = "12",
+                    "III (middle)" = "3",
+                    "IV-V (low)" = "45"),
+    sc = fct_relevel(sc, "I-II (high)", "III (middle)", "IV-V (low)"),
+    smoke = fct_relevel(smoke, "nevr", "ex", "lite", "mod", "hvy"),
+    area = as.factor(area)
+  )
+
+glimpse(B_mod)
+```
+
+`sc` gets readable names, and `smoke` goes in order from never to heavy instead of alphabetical. `age` and `carstair` stay as numbers.
+
+One helper column: `carstair` cut into three equal groups. These are **cut-offs we chose** (equal thirds), not groups in the data.
+
+```{r}
+#| label: helper-deprivation
+
+B_mod <- B_mod |>
+  mutate(deprivation = cut_number(carstair, n = 3,
+                                  labels = c("less deprived", "middle", "more deprived")))
+```
+
+All ready now.
+
 ### 2. Ask
+
+Based on the spine (*how do class and smoke talk*), these are our questions:
+
+Possibly can answer:
+
+1.  Does higher social class (`sc`) go with lower deprivation (`carstair`)?
+1.  Is deprivation related to CVD?
+1.  Does social class affect CVD?
+1.  Does smoking lower your risk of CVD? (Main Character Question)
+
+Possibly cannot answer:
+
+1.  Why do ex-smokers have the highest rate of CVD? Did they quit *because* they got ill? (No dates for quitting or diagnosis.)
 
 ### 3. Choose a mark
 
+1.  Bar chart for the Qual counts (`sex`, `sc`, `smoke`, `cvd`)
+1.  Boxplot for Quant + Qual (`carstair` by `sc`, `carstair` by `cvd`, `age` by `smoke`)
+1.  Mosaic plot for Qual + Qual (`deprivation × sc`, `cvd × sc`, `smoke × cvd`), shaded to show surprises
+1.  Chi-square test beside each mosaic: are two categories linked, or is it chance?
+1.  t-test (2 groups)
+
 ### 4. Predict
+
+1.  **Question 1:** Higher social classes will live in less deprived areas.
+1.  **Question 2:** Deprivation and CVD will be inversely related.
+1.  **Question 3:** Lower social classes will have more CVD.
+1.  **Question 4 (Main):** Smokers will have more CVD than people who never smoked.
 
 ### 5. Make
 
+These are the charts we used to explore the data. They don't show up in the render, but they helped us decide what to look at next.
+
+```{r}
+#| label: panelB-charts-I-want-to-see-but-not-show-1
+#| eval: false
+#| echo: true # Include the code, but don't compute in render
+
+## Qual counts
+B_mod |> gf_bar(~ sex)
+B_mod |> gf_bar(~ sc)
+B_mod |> gf_bar(~ smoke)
+B_mod |> gf_bar(~ cvd)
+
+## Quant shapes
+B_mod |> gf_density(~ age)
+B_mod |> gf_density(~ carstair)
+```
+
+**Question 1: does higher social class go with lower deprivation?**
+
+```{r}
+#| label: sc-deprivation
+
+B_mod |> gf_boxplot(carstair ~ sc, fill = ~ sc) |>
+  gf_labs(title = "Lower social class, more deprived neighbourhood",
+          x = "Social class", y = "Carstairs score (higher = more deprived)")
+
+vcd::structable(deprivation ~ sc, data = B_mod) |>
+  vcd::mosaic(shade = TRUE, main = "Higher classes live in less deprived areas")
+
+B_mod |> group_by(sc) |> summarise(mean_carstair = mean(carstair), n = n())
+aov(carstair ~ sc, data = B_mod) |> summary()
+```
+
+Prediction was right. Class I–II averages -1.24 on `carstair`, class IV–V averages +0.65. 47% of class I–II live in the least deprived third of areas, compared to 23% of class IV–V.
+
+**Question 2: is deprivation related to CVD?**
+
+Our first look:
+
+```{r}
+#| label: deprivation-cvd-histogram
+
+B_mod |>
+  gf_histogram(~ carstair, fill = ~ cvd) |>
+  gf_facet_wrap(~ smoke)
+```
+
+Hard to compare, because the `cvd` groups and smoking groups are such different sizes. So, a boxplot and a mosaic:
+
+```{r}
+#| label: deprivation-cvd
+
+B_mod |> gf_boxplot(carstair ~ cvd, fill = ~ cvd) |>
+  gf_labs(title = "People with CVD live in slightly more deprived areas",
+          x = "CVD", y = "Carstairs score (higher = more deprived)")
+
+vcd::structable(cvd ~ deprivation, data = B_mod) |>
+  vcd::mosaic(shade = TRUE, main = "A little more CVD in more deprived areas")
+
+mosaic::t_test(carstair ~ cvd, data = B_mod)
+```
+
+Prediction missed, in direction. It's not inverse: **more** deprivation goes with **a bit more** CVD. 25% of people in the least deprived third have CVD, compared to 29% in the most deprived third. The gap is small, but the t-test says it's real (p far below 0.05).
+
+**Question 3: does social class affect CVD?**
+
+```{r}
+#| label: sc-cvd
+
+vcd::structable(cvd ~ sc, data = B_mod) |>
+  vcd::mosaic(shade = TRUE, main = "CVD barely changes across social class")
+
+B_mod |> group_by(sc) |> summarise(pct_cvd = mean(cvd == "yes"), n = n())
+mosaic::xchisq.test(mosaic::tally(cvd ~ sc, data = B_mod))
+```
+
+Only a small difference: 25.7% (I–II), 27.8% (III), 28.5% (IV–V). The chi-square p-value is about 0.06, just above 0.05, so we can't say class and CVD are linked here.
+
+Class does talk to smoking, though:
+
+```{r}
+#| label: sc-smoke
+
+vcd::structable(smoke ~ sc, data = B_mod) |>
+  vcd::mosaic(shade = TRUE, main = "Lower classes smoke more heavily")
+```
+
+48% of class I–II have never smoked, compared to 35% of class IV–V. Heavy smokers: 9% vs 19%.
+
+**Question 4 (Main): does smoking lower your risk of CVD?**
+
+Our mosaics and test:
+
+```{r}
+#| label: smoke-cvd
+
+vcd::structable(smoke ~ cvd, data = B_mod) |> vcd::mosaic()
+vcd::structable(smoke ~ cvd, data = B_mod) |> vcd::mosaic(type = "expected")
+vcd::structable(smoke ~ cvd, data = B_mod) |>
+  vcd::mosaic(shade = TRUE, main = "Ex-smokers stand out with the most CVD")
+
+B_mod |> group_by(smoke) |> summarise(pct_cvd = mean(cvd == "yes"), n = n())
+mosaic::xchisq.test(mosaic::tally(smoke ~ cvd, data = B_mod))
+```
+
+Prediction missed. Current smokers (lite, mod, hvy: 24–26%) have about the same CVD rate as people who never smoked (24%). The group that stands out is **ex-smokers, at 36%**. Why?
+
+```{r}
+#| label: smoke-age
+
+B_mod |> gf_boxplot(age ~ smoke, fill = ~ smoke) |>
+  gf_labs(title = "Ex-smokers are older than everyone else", x = NULL, y = "Age")
+
+B_mod |> group_by(smoke) |> summarise(mean_age = mean(age))
+```
+
+Ex-smokers are older (average 52, compared to 42–45 for the other groups), and CVD goes up a lot with age. So age is probably doing a lot of the work here.
+
 ### 6. Say
+
+1.  Class and place talk: higher social classes live in less deprived areas (class I–II average `carstair` -1.24 vs +0.65 for class IV–V, p far below 0.05).
+1.  More deprived areas have slightly more CVD (25% vs 29%), the opposite direction from our prediction. Small, but real.
+1.  Social class on its own barely changes CVD (p ≈ 0.06). Class shows up in *where people live* and *how much they smoke* more than in CVD directly.
+1.  Smoking does **not** lower your risk. Current smokers have about the same CVD rate as never-smokers, and ex-smokers have the most (36%), but they're also the oldest group.
 
 ### 7. Limit
 
+- One snapshot from 1998. Links, not causes.
+- We don't know when people quit smoking or when CVD was diagnosed, so some ex-smokers may have quit *because* they got ill.
+- `smoke` is in groups, and we don't know what "lite" or "hvy" actually means in cigarettes.
+- `carstair` describes the area, not the person: a well-off person in a deprived area gets the area's score.
+- `sc` is based on job type, which leaves out people without a job and says nothing about income.
+- `cvd` is just yes / no, with no type or severity.
+- Age affects almost everything here, and we haven't fully separated it out.
+- The deprivation groups are cut-offs we chose (equal thirds).
+- Kit table we refused to abuse: `sc` and `area` were never averaged or treated as numbers, and `area` was never used as a map.
+
 # Conclusion
 
-- **The question we will defend in ninety seconds:** Do smokers and non-smokers carry cholesterol differently, and why do male smokers look *healthier*?
-- **What we will not claim:** that smoking is good for cholesterol, or that anything here causes heart disease.
+- **The spine so far:** Bodies carry risk differently by sex (A), class talks to *where people live* and *how much they smoke* more than to heart disease directly (B), and smoking keeps refusing to behave the way we predicted in both panels.
+- **The questions we will defend in ninety seconds:**
+    - Panel A: Do smokers and non-smokers carry cholesterol differently, and why do male smokers look *healthier*?
+    - Panel B: Does smoking lower your risk of CVD? (No: ex-smokers have the most CVD, and they're also the oldest.)
+- **What we will not claim:** that smoking is good for cholesterol or the heart, that social class causes CVD, or that anything here causes heart disease.
 - **Which lines were human, which were machine:**
-    - Human: the questions (smoking vs cholesterol; how much smoking matters), the predictions, the first HDL/LDL histograms, the sys/dia scatter, using `facet_wrap()` by sex, spotting the "how many cigarettes" limit, the helper columns and cut-offs, the violins and `tally()` counts.
-    - Machine (AI-assisted): the `pivot_longer()` combined chart, the summary numbers in 1. See, the t-tests and the non-drinker check, the extra findings (age/BP, waist-to-hip, trig/HDL), formatting `index.qmd` into the template layout, merging our two drafts into one file.
-- **Limits:** one snapshot, smoking is yes / no only, only 36 female smokers, unknown sampling.
-- **Gift for the steal-this strip:** `pivot_longer()` to put two measures side by side in one faceted chart, and helper columns with cut-offs stated out loud.
+    - Human: the questions in both panels, the predictions, the first HDL/LDL histograms, the sys/dia scatter, using `facet_wrap()` by sex, spotting the "how many cigarettes" limit, the helper columns and cut-offs, the violins and `tally()` counts, the cholesterol-by-sex histogram and t-test from class, the `carstair` histogram faceted by `smoke`, and the `smoke × cvd` mosaics and chi-square test.
+    - Machine (AI-assisted): the `pivot_longer()` combined chart,, formatting `index.qmd` into the template layout, merging drafts into one file, formatting Panel B, the deprivation groups (`cut_number()`), the age check for ex-smokers, and checking the numbers in both panels.
+- **Limits:** one snapshot each, smoking is yes / no only in A and in loose groups in B, only 36 female smokers in A, age tangled up with smoking in B, `carstair` describes the area not the person, unknown sampling.
+- **Gift for the steal-this strip:** `pivot_longer()` to put two measures side by side in one faceted chart, helper columns with cut-offs stated out loud, and `fct_relevel()` / `fct_recode()` to put categories in a sensible order with readable names.

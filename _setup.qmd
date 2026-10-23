@@ -10,11 +10,11 @@ font_add_google("Alegreya", "Alegreya")
 
 showtext_auto()
 
-theme_set(theme_bw(base_size = 12, base_family = "Lato"))
+theme_set(theme_bw(base_size = 28, base_family = "Lato"))
 
 theme_update(
-  plot.title = element_text(family = "Alegreya", face = "bold", size = 16),
-  plot.caption = element_text(family = "Alegreya", size = 12)
+  plot.title = element_text(family = "Alegreya", face = "bold", size = 26),
+  plot.caption = element_text(family = "Alegreya", size =22)
 )
 
 update_geom_defaults("text", list(family = "Lato"))

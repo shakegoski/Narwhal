@@ -1,5 +1,5 @@
 ---
-title: "Group 2 — Risk factors"
+title: "Group 2 - Risk factors"
 subtitle: "Studio wall"
 author: "Siva, Shaariq and Taniska"
 format:
@@ -13,13 +13,13 @@ code-tools: true
 
 > How do bodies carry risk, how do class and smoke talk, and where do children still die young?
 
-# Introduction — the tables we own
+# Introduction - the tables we own
 
 This folder is ours for the ten days. Three tables, three shapes.
 
-- **Panel A** (`panel-A.csv`) — `cardioRiskFactors`: BMI, lipids, blood pressure, uric acid. `sex` and `smok` have already been recoded from integers to factors.
-- **Panel B** (`panel-B.csv`) — Scottish Health Survey 1998: sex, social class, smoking, diagnosed CVD. `area` is a code, not a map.
-- **Panel C** (`panel-C.csv`) — SOWC child / infant / neonatal mortality by country. Join by country name.
+- **Panel A** (`panel-A.csv`) - `cardioRiskFactors`: BMI, lipids, blood pressure, uric acid. `sex` and `smok` have already been recoded from integers to factors.
+- **Panel B** (`panel-B.csv`) - Scottish Health Survey 1998: sex, social class, smoking, diagnosed CVD. `area` is a code, not a map.
+- **Panel C** (`panel-C.csv`) - SOWC child / infant / neonatal mortality by country. Join by country name.
 
 If a brick needs a histogram, it lives in A. If it needs a mosaic, it lives in B.
 
@@ -34,9 +34,12 @@ library(ggformula)
 
 A <- read_csv("data/panel-A.csv")
 B <- read_csv("data/panel-B.csv")
+Panel_C <- read_csv("data/panel-C.csv")
 ```
 
-# Panel A — body / measure
+{{< include _setup.qmd >}}
+
+# Panel A - body / measure
 
 > *bmi, choles, sys, dia, Uric are Quant. Do not average `smok`.*
 
@@ -400,7 +403,7 @@ A_mod |> group_by(smok) |> summarize ( mean_choles = mean(choles, na.rm = T))
 mosaic::t_test(choles ~ sex, data = A_mod)
 ```
 
-# Panel B — category / talk
+# Panel B - category / talk
 
 > *smoke × sex, cvd × sc (social class). `area` is forbidden as geography. Do not average `sc`.*
 
@@ -665,15 +668,553 @@ Ex-smokers are older (average 52, compared to 42–45 for the other groups), and
 - The deprivation groups are cut-offs we chose (equal thirds).
 - Kit table we refused to abuse: `sc` and `area` were never averaged or treated as numbers, and `area` was never used as a map.
 
+# Panel C - place
+
+*Asia-only lifeExp / gdpPercap / pop. Join to rnaturalearth; unmatched names are a brick.*
+
+
+```{r}
+library(sf)
+library(rnaturalearth)
+world <- ne_countries(scale = "medium", returnclass = "sf")
+```
+
+
+
+### 1. See the table
+
+What is a case? Which columns are Quant / Qual? What is missing?
+
+```{r}
+glimpse(Panel_C)
+inspect(Panel_C)
+skim(Panel_C)
+
+world <- rnaturalearth::ne_countries(returnclass = "sf")
+
+world_selected <- world |> dplyr::select(name, geometry)
+
+C_mod <- Panel_C |> left_join(world_selected, by = c("country" = "name"))
+
+library(countrycode)
+library(dplyr)
+
+Panel_C <- Panel_C |>
+  mutate(
+    country = countrycode(
+      country,
+      origin = "country.name",
+      destination = "country.name"
+    )
+  )
+
+world_selected <- world |>
+  select(name, geometry)
+
+C_mod <- Panel_C |>
+  left_join(world_selected, by = c("country" = "name"))
+
+glimpse(C_mod)
+skim(C_mod)
+
+```
+
+What's off in this table and what we mutate:
+
+- `country`: this is the only thing linking the table to the map, and the names are written a different way than the map data writes them. Five don't match: "Hong Kong, China", "Korea, Dem. Rep.", "Korea, Rep.", "West Bank and Gaza" and "Yemen, Rep.". If we join as is, those countries come out blank. Mutated with `countrycode()` so the names line up.
+- `geometry`: not in the csv at all, the shapes come from `rnaturalearth`. Added with a join on the country name.
+- `pop` and `gdpPercap`: numbers are fine, but they're really lopsided. China and India are huge and a few countries are way richer than the rest, so on a colour scale most countries end up pale.
+- `lifeExp`: already numeric and behaving.
+
+
+### 2. Ask
+
+One question *this* table can answer. One it cannot. Write both.
+
+```{r}
+
+C_mod |>
+  gf_point(lifeExp ~ gdpPercap) |> gf_lm()
+
+```
+
+This graph is a Life Expectancy to gdp Per Capita.
+
+It can answer *How does life expectancy change in proportion to gdp Per Capita*
+      Life expectancy increases in proportion to GDP Per Capita
+      
+It can not answer *What is the percentage of population in a country which is contributing to increase the GDP and is this affecting the poor percentage of the population with respect to life expectancy*
+
+### 3. Choose a mark
+
+Geom, map mark, or (later) test that matches the pair type. Name it before you code.
+
+```{r}
+C_mod |> gf_sf(geometry = ~ geometry, fill = ~ pop)
+```
+This is a gradient map with population.
+
+This map shows that China is the country with the highest population, India in a close second place.
+
+Most of the other countries are pretty far away from these 2.
+
+```{r}
+C_mod |> gf_sf(geometry = ~ geometry, fill = ~ gdpPercap)
+
+```
+
+This is a gradient map with GDP Per Capita
+
+
+
+```{r}
+C_mod |> gf_sf(geometry = ~ geometry, fill = ~ lifeExp)
+```
+
+This is a gradient map with Life Expectancy
+
+
+# Panel D - Erin Brockovich - Hinkley
+
+In the movie, Erin goes door to door in Hinkley asking families about their health, their water, and whether PG&E ever got in touch. Every family she talks to becomes **one row**. We have two made-up tables for this:
+
+- **Families** (`hinkley_families.csv`): Erin's notes. 270 families, 645 people in total, living around the PG&E station.
+- **Plume** (`hinkley_plume.csv`): the dirty water (chromium-6). Where the PG&E station is, and the corners of the plume polygon, split into three zones by how strong the chromium-6 is.
+
+The two tables talk to each other through `plume_zone`: every family is tagged with the plume zone its house sits in (or `outside`). The data is made up for this assignment using Claude.
+
+```{r}
+#| label: setup-erin
+
+library(tidyverse)
+library(mosaic)
+library(skimr)
+library(ggformula)
+library(broom)
+library(leaflet)
+
+H <- read_csv("data/hinkley_families.csv")
+P <- read_csv("data/hinkley_plume.csv")
+```
+
+### 1. See the table
+
+```{r}
+#| label: inspect-hinkley-data-1
+
+glimpse(H)
+```
+
+Our families table has:
+
+- 270 observations and 19 variables. One case = one family.
+- `family_id`, `family`, `street`: Qualitative, just labels. Encoded `<chr>`
+- `house_no`: Qualitative, even though it's a number! It's a label for a house, so **never take its mean**. Encoded `<dbl>`, to be mutated
+- `lon`, `lat`: Quantitative, where the house is on the map
+- `distance_km`: Quantitative, how far the house is from the PG&E station
+- `in_plume`: Qualitative, `inside` or `outside` the plume. Encoded `<chr>`, to be mutated
+- `plume_zone`: Qualitative, `high`, `medium`, `low` or `outside`. Encoded `<chr>`, to be mutated
+- `n_members`, `n_children`, `years_in_town`: Quantitative
+- `pet`, `drinks_well_water`: Qualitative. Encoded `<chr>`, to be mutated
+- `cr6_ppb`: Quantitative, the chromium-6 reading from the family's water test
+- `health_score`: Quantitative, 0 to 10, where **10 is the worst**
+- `illness_level`: Qualitative, `none`, `mild` or `severe`. Encoded `<chr>`, to be mutated
+- `contacted_by_pge`, `moved_out`: Qualitative, yes / no. Encoded `<chr>`, to be mutated
+
+
+```{r}
+#| label: inspect-hinkley-data-2
+
+skim(H)
+```
+
+On the Qual variables, the families table has:
+
+- `in_plume`: 115 families inside, 155 outside
+- `plume_zone`: 30 `high`, 37 `medium`, 48 `low`, 155 `outside`
+- `illness_level`: 125 `none`, 98 `mild`, 47 `severe`
+- `contacted_by_pge`: 83 yes, 187 no
+- `moved_out`: 82 yes, 188 no
+- `drinks_well_water`: 151 yes, 119 no
+- `pet`: dog 96, none 82, cat 53, horse 16, other 13, bird 10
+
+On the Quant variables, the families table has:
+
+- `distance_km`: mean 1.14, sd 0.68, median 1.07, min 0.01, max 3.02
+- `health_score`: mean 3.61, sd 2.43, median 3.1, max 10
+- `cr6_ppb`: mean 56, median 35, max 585. Very skewed right: a few water tests are way higher than the rest
+- `years_in_town`: mean 16.2, median 14, max 74 (a couple of very long-term residents)
+- `n_members`: mean 2.4, and it adds up to 645 people
+
+There is no missing data.
+
+Now the plume table:
+
+```{r}
+#| label: inspect-plume
+
+glimpse(P)
+```
+
+- 25 rows and 6 columns. The first row (`feature = plant`) is the PG&E station. The other 24 rows are the corners of three nested plume polygons (8 corners each), one for each `zone`.
+- `feature`, `zone`: Qualitative
+- `cr6_ppb`: Quantitative, the chromium-6 level for that zone (about 150 in `high`, 60 in `medium`, 20 in `low`)
+- `vertex_id`: the order of the corners (a label, so don't average it)
+- `lon`, `lat`: Quantitative, the position of the station or the corner
+
+Now the mutating. `as_factor()` for the Qual columns, plus two helper columns for the charts. These are **cut-offs we chose**, not columns in the data: "affected" means `illness_level` is `mild` or `severe`, and `distance_band` chops `distance_km` into 4 rings around the station.
+
+```{r}
+#| label: mutate-hinkley
+
+H_mod <- H |>
+  mutate(
+    across(c(house_no, in_plume, plume_zone, pet, drinks_well_water,
+             illness_level, contacted_by_pge, moved_out), as_factor),
+    affected = as_factor(if_else(illness_level == "none", "unaffected", "affected")),
+    distance_band = cut(distance_km,
+                        breaks = c(0, 0.5, 1, 1.5, Inf),
+                        labels = c("0 to 0.5 km", "0.5 to 1 km", "1 to 1.5 km", "1.5+ km"),
+                        include.lowest = TRUE)
+  )
+
+glimpse(H_mod)
+
+H_mod |> summarise(n_affected = sum(affected == "affected"),
+                   pct_affected = round(100 * mean(affected == "affected"), 1))
+```
+
+Findings from this look:
+
+1. 270 families and 645 people. 115 families live inside the plume.
+2. 145 families (54%) are affected, meaning `mild` or `severe`. 47 are `severe`.
+3. 82 families (30%) have moved out, and PG&E contacted 83.
+4. No missing values, so every chart and test uses all 270 families.
+
+### 2. Ask
+
+Based on the movie, these are our questions:
+
+Possibly can answer:
+
+1. Are families closer to the PG&E station more likely to be affected? And is health different inside vs outside the plume?
+2. Did the families who moved out live closer to the station?
+3. Did families that PG&E contacted move out more often than the ones it didn't?
+4. Does health get worse closer to the station?
+5. On a map, do the sick families sit where the plume is strongest?
+
+Possibly cannot answer:
+
+1. Did the chromium-6 *cause* the illness? (No dates, nothing about age or smoking.)
+2. *Why* did a family move? (We only know yes / no, not the reason.)
+
+### 3. Choose a mark
+
+1. Bar chart for Qual + Qual: `affected` by `distance_band`. Bars go to 100% so the bands can be compared fairly, because they have different numbers of families.
+2. Two-sample t-test (Quant + 2 groups): `health_score` inside vs outside the plume.
+3. Histogram for one Quant: `distance_km`, only for families that moved out.
+4. Bar chart for Qual + Qual: `contacted_by_pge`, filled by `moved_out`.
+5. Scatter + straight-line smoother for Quant + Quant: `health_score ~ distance_km`, with a correlation number to back it up.
+6. Three `leaflet` maps :
+    - **Map 1:** families as coloured dots, with the plume zones drawn on top as polygons, plus markers for the PG&E station and Erin
+    - **Map 2:** rings around the station with `addCircles()` (radius in **metres**), families sized by health score. Greater the circle, worse the health score.
+    - **Map 3:** who moved out and who PG&E contacted
+
+### 4. Predict
+
+1. **Question 1:** The closer to the station, the bigger the share of affected families, and inside-plume families will have a higher average health score.
+2. **Question 2:** Most families that moved out will live close to the station.
+3. **Question 3:** Families PG&E contacted will move out more often.
+4. **Question 4:** Health scores will get worse closer to the station.
+5. **Maps:** The red (severe) dots will bunch up in the strongest plume zones, and the families that moved out will mostly come from near the station.
+
+### 5. Make
+
+**Question 1: are families closer to the station more likely to be affected?**
+
+```{r}
+#| label: affected-by-distance
+
+H_mod |>
+  gf_bar(~ distance_band, fill = ~ affected, position = "fill") |>
+  gf_labs(
+    x = "Distance from the PG&E station",
+    y = "Share of families",
+    fill = "Status",
+  )
+
+H_mod |> group_by(distance_band) |>
+  summarise(n = n(),
+            n_affected = sum(affected == "affected"),
+            pct_affected = round(100 * mean(affected == "affected"), 1))
+```
+
+71% of families in the closest ring (0 to 0.5 km) are affected, then 63%, 43% and 42% as we move out. After about 1 km it stops dropping.
+
+Same question, but with a test. Is the average health score different inside and outside the plume? Our starting guess (H0) is that it's the same.
+
+```{r}
+#| label: t-test-plume
+
+H_mod |> group_by(in_plume) |>
+  summarise(n = n(),
+            pct_affected = round(100 * mean(affected == "affected"), 1),
+            mean_health = round(mean(health_score), 2))
+
+mosaic::t.test(health_score ~ in_plume, data = H_mod)
+
+broom::tidy(mosaic::t.test(health_score ~ in_plume, data = H_mod))
+```
+
+Inside the plume, 70% of families are affected, compared to 41% outside. The average health score is 4.57 inside and 2.90 outside, so about 1.7 points worse inside (95% CI about 1.1 to 2.3; t = 5.69, p far below 0.05). The two averages are not the same.
+
+**Question 2: did the families who moved out live closer to the station?**
+
+```{r}
+#| label: moved-histogram
+
+H_mod |>
+  filter(moved_out == "yes") |>
+  gf_histogram(~ distance_km, binwidth = 0.5, boundary = 0, color = "white") |>
+  gf_labs(
+    x = "Distance from the PG&E station (km)",
+    y = "Families that moved out"
+  )
+
+H_mod |> group_by(moved_out) |>
+  summarise(n = n(), median_distance = median(distance_km))
+```
+
+82 families moved out, and 52 of them (29 + 23) lived within 1 km of the station. The median distance is about 0.65 km for families that moved vs 1.15 km for families that stayed. Some moved from further out too.
+
+**Question 3: did families that PG&E contacted move out more often?**
+
+```{r}
+#| label: contacted-moved
+
+H_mod |>
+  gf_bar(~ contacted_by_pge, fill = ~ moved_out, position = "dodge") |>
+  gf_labs(
+    x = "Contacted by PG&E?",
+    y = "Families",
+    fill = "Moved out?"
+  )
+
+H_mod |> group_by(contacted_by_pge) |>
+  summarise(n = n(), pct_moved = round(100 * mean(moved_out == "yes"), 1))
+
+H_mod |> group_by(in_plume) |>
+  summarise(n = n(), pct_contacted = round(100 * mean(contacted_by_pge == "yes"), 1))
+```
+
+41% of contacted families moved out compared to 26% of the others. But look at *who got contacted*: 59% of families inside the plume vs only 10% outside. So contact and living in the plume are tangled together.
+
+**Question 4: does health get worse closer to the station?**
+
+```{r}
+#| label: health-distance
+
+H_mod |>
+  gf_point(health_score ~ distance_km) |>
+  gf_smooth(method = "lm") |>
+  gf_labs(
+    x = "Distance from the PG&E station (km)",
+    y = "Health score (10 = worst)",
+  )
+
+H_mod |> summarise(r = stats::cor(distance_km, health_score))
+
+coef(stats::lm(health_score ~ distance_km, data = H_mod))
+```
+
+The line slopes down: roughly 1 point lower for each extra km away. The correlation is about -0.28, which is weak. The dots are all over the place, with some sick families far away and some healthy ones close in.
+
+**Question 5: do the sick families sit where the plume is strongest? (the maps)**
+
+Some setup for all three maps. The PG&E station comes from the plume table, Erin gets a made-up spot, and we pick colours.
+
+```{r}
+#| label: map-setup
+
+pge  <- P |> filter(feature == "plant")      # one row: where the PG&E station is
+erin <- tibble(name = "Erin's base (made-up spot)", lon = -117.1700, lat = 34.8985)
+
+pal_ill  <- colorFactor(c("#2ca02c", "#ff9900", "#d62728"),
+                        domain = c("none", "mild", "severe"))
+pal_aff  <- colorFactor(c("#d62728", "#1f77b4"),
+                        domain = c("affected", "unaffected"))
+pal_move <- colorFactor(c("#6a3d9a", "#a6cee3"), domain = c("yes", "no"))
+
+# a text box for the pop-up of each family
+H_mod <- H_mod |>
+  mutate(popup = paste0("<b>The ", family, " family</b><br>",
+                        house_no, " ", street, "<br>",
+                        "Members: ", n_members, "<br>",
+                        "Chromium-6: ", cr6_ppb, " ppb<br>",
+                        "Health score: ", health_score, " (", illness_level, ")<br>",
+                        "Contacted by PG&E: ", contacted_by_pge, "<br>",
+                        "Moved out: ", moved_out))
+```
+
+**Map 1: the plume over the families.** Esri street map as the base (you can see the roads and houses), with a satellite option. The family dots go on first and the plume polygons go on top, so we can see which dots sit under the strongest zone. The polygons have `interactive = FALSE` so you can still click the dots underneath.
+
+```{r}
+#| label: map-1-plume
+
+leaflet() |>
+  setView(lng = -117.1622, lat = 34.8920, zoom = 14) |>
+  addProviderTiles("Esri.WorldStreetMap", group = "Streets") |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite") |>
+  # families (dots coloured by illness)
+  addCircleMarkers(
+    data = H_mod, lng = ~lon, lat = ~lat,
+    radius = 5, color = "black", weight = 1,
+    fillColor = ~ pal_ill(illness_level), fillOpacity = 0.9,
+    label = ~family, popup = ~popup, group = "Families"
+  ) |>
+  # plume zones on top, biggest first
+  addPolygons(
+    data = P |> filter(zone == "low"), lng = ~lon, lat = ~lat,
+    color = "#fed976", weight = 1, fillColor = "#fed976", fillOpacity = 0.35,
+    group = "Plume", options = pathOptions(interactive = FALSE)
+  ) |>
+  addPolygons(
+    data = P |> filter(zone == "medium"), lng = ~lon, lat = ~lat,
+    color = "#fd8d3c", weight = 1, fillColor = "#fd8d3c", fillOpacity = 0.35,
+    group = "Plume", options = pathOptions(interactive = FALSE)
+  ) |>
+  addPolygons(
+    data = P |> filter(zone == "high"), lng = ~lon, lat = ~lat,
+    color = "#bd0026", weight = 1, fillColor = "#bd0026", fillOpacity = 0.35,
+    group = "Plume", options = pathOptions(interactive = FALSE)
+  ) |>
+  # the company and Erin
+  addMarkers(data = pge, lng = ~lon, lat = ~lat,
+             label = "PG&E Hinkley station",
+             popup = "PG&E Hinkley compressor station (where the plume starts)") |>
+  addMarkers(data = erin, lng = ~lon, lat = ~lat,
+             label = ~name, popup = ~name) |>
+  addLegend(position = "bottomright", pal = pal_ill,
+            values = c("none", "mild", "severe"), title = "Illness level") |>
+  addLegend(position = "bottomleft",
+            colors = c("#fed976", "#fd8d3c", "#bd0026"),
+            labels = c("low (about 20 ppb)", "medium (about 60 ppb)", "high (about 150 ppb)"),
+            title = "Chromium-6 in the plume", opacity = 0.6) |>
+  addLayersControl(baseGroups = c("Streets", "Satellite"),
+                   overlayGroups = c("Families", "Plume"),
+                   options = layersControlOptions(collapsed = FALSE))
+
+H_mod |> group_by(plume_zone) |>
+  summarise(n = n(),
+            pct_affected = round(100 * mean(affected == "affected"), 1),
+            n_moved = sum(moved_out == "yes")) |>
+  arrange(desc(pct_affected))
+```
+
+The stronger the zone, the bigger the share of affected families: 83% in `high`, 70% in `medium`, 63% in `low`, and 41% outside the plume. The red (severe) dots pile up near the station: 16 of the 30 families in the `high` zone are severe (53%), compared to 13 of 155 outside the plume (8%). But there are still red dots outside the plume and green ones inside it.
+
+**Map 2: circles around the station.** `addCircles()` takes its radius in **metres** (unlike `addCircleMarkers()`, which is in pixels). The rings are the same 0.5 km bands as the bar chart, with the affected share of each band on hover. The dots are bigger for sicker families.
+
+```{r}
+#| label: map-2-rings
+
+ring_pct <- H_mod |> group_by(distance_band) |>
+  summarise(pct_affected = round(100 * mean(affected == "affected")))
+
+rings <- tibble(radius_m = c(1500, 1000, 500),   # biggest first, so we can hover the small ones
+                lon = pge$lon, lat = pge$lat,
+                label = paste0(rev(ring_pct$distance_band[1:3]), ": ",
+                               rev(ring_pct$pct_affected[1:3]), "% affected"))
+
+leaflet() |>
+  setView(lng = -117.1622, lat = 34.8920, zoom = 14) |>
+  addProviderTiles("Esri.WorldStreetMap") |>
+  addCircles(
+    data = rings, lng = ~lon, lat = ~lat, radius = ~radius_m,
+    color = "black", weight = 2, dashArray = "6",
+    fillColor = "red", fillOpacity = 0.05, label = ~label
+  ) |>
+  addCircleMarkers(
+    data = H_mod, lng = ~lon, lat = ~lat,
+    radius = ~ 2 + health_score,               # pixels: bigger = sicker
+    color = "black", weight = 1,
+    fillColor = ~ pal_aff(affected), fillOpacity = 0.7,
+    label = ~family, popup = ~popup
+  ) |>
+  addMarkers(data = pge, lng = ~lon, lat = ~lat, label = "PG&E Hinkley station") |>
+  addLegend(position = "bottomright", pal = pal_aff,
+            values = c("affected", "unaffected"),
+            title = "Status (dot size = health score)")
+```
+
+Inside the first 1 km, most dots are red (affected) and big. Past the 1 km ring, only about 4 in 10 families are affected (43% and 42%), which matches the bar chart.
+
+**Map 3: who moved out and who PG&E contacted.** Purple dots are families that moved out, light blue ones stayed, and a gold outline means PG&E contacted them. The plume outline is just for reference.
+
+```{r}
+#| label: map-3-moved
+
+leaflet() |>
+  setView(lng = -117.1622, lat = 34.8920, zoom = 14) |>
+  addProviderTiles("Esri.WorldStreetMap") |>
+  addPolygons(
+    data = P |> filter(zone == "low"), lng = ~lon, lat = ~lat,
+    color = "#7a0177", weight = 2, fill = FALSE,
+    options = pathOptions(interactive = FALSE)
+  ) |>
+  addCircleMarkers(
+    data = H_mod, lng = ~lon, lat = ~lat,
+    radius = 5,
+    color = ~ if_else(contacted_by_pge == "yes", "gold", "black"),
+    weight = ~ if_else(contacted_by_pge == "yes", 3, 1),
+    fillColor = ~ pal_move(moved_out), fillOpacity = 0.9,
+    label = ~family, popup = ~popup
+  ) |>
+  addMarkers(data = pge, lng = ~lon, lat = ~lat, label = "PG&E Hinkley station") |>
+  addLegend(position = "bottomright", pal = pal_move,
+            values = c("yes", "no"), title = "Moved out?") |>
+  addLegend(position = "bottomleft", colors = "gold",
+            labels = "Gold outline = contacted by PG&E")
+```
+
+The purple dots (moved out) are thickest near the station, and the gold outlines (contacted) mostly sit inside the plume outline. Contacted families are 31% of everyone, but 59% of the families inside the plume.
+
+### 6. Say
+
+1. Closer to the station means more affected families: 71% in the 0 to 0.5 km ring, about 42% beyond 1 km.
+2. Health scores are worse inside the plume (4.57 vs 2.90 on average), and the t-test says that gap is unlikely to be chance.
+3. The stronger the plume zone, the bigger the share of affected families (83% in `high`, 41% outside the plume).
+4. Most families that moved out lived within 1 km of the station.
+5. Contacted families moved out more often (41% vs 26%), but PG&E mostly contacted families inside the plume, so the two are interlinked.
+6. Distance and health are linked, but weakly.
+
+### 7. Limit
+
+- We can't say the chromium-6 caused the illness. No dates, no age, no smoking, nothing about other causes.
+- We only know whether a family moved, not why, and not when. The map shows where they *used to* live.
+- The t-test only compares averages for two groups. It doesn't tell us what's driving the difference.
+- Q3 is just counts, with no test, and contact is tangled up with living in the plume.
+
+### Hinkley wrap-up
+
+So what did Erin's Map tell us? Families closer to the PG&E station are more likely to be sick, and the families inside the plume score worse on health than the ones outside. The t-test backs that up: about 1.7 points worse on average, and that's not just luck. On the map, the strongest plume zone is also where most of the sick families live, and most of the families that left came from near the station too.
+
+The pattern isn't a clean line, because there are sick families far from the plume and healthy ones right next to it. We can say "closer goes with sicker", not "the plume made them sick". Real Erin had to prove the second part with a lot more work than a t-test and three maps.
+
+
+```r
+# sessionInfo()
+```
+
+
 # Conclusion
 
-- **The spine so far:** Bodies carry risk differently by sex (A), class talks to *where people live* and *how much they smoke* more than to heart disease directly (B), and smoking keeps refusing to behave the way we predicted in both panels.
+- **The spine so far:** Bodies carry risk differently by sex (A), class talks to *where people live* and *how much they smoke* more than to heart disease directly (B), richer Asian countries tend to live longer but wealth and population are really lopsided on the map (C), and in our made-up Hinkley data, families closer to the PG&E plume are sicker and more of them left (D). Smoking keeps refusing to behave the way we predicted in both A and B.
 - **The questions we will defend in ninety seconds:**
     - Panel A: Do smokers and non-smokers carry cholesterol differently, and why do male smokers look *healthier*?
     - Panel B: Does smoking lower your risk of CVD? (No: ex-smokers have the most CVD, and they're also the oldest.)
-- **What we will not claim:** that smoking is good for cholesterol or the heart, that social class causes CVD, or that anything here causes heart disease.
-- **Which lines were human, which were machine:**
-    - Human: the questions in both panels, the predictions, the first HDL/LDL histograms, the sys/dia scatter, using `facet_wrap()` by sex, spotting the "how many cigarettes" limit, the helper columns and cut-offs, the violins and `tally()` counts, the cholesterol-by-sex histogram and t-test from class, the `carstair` histogram faceted by `smoke`, and the `smoke × cvd` mosaics and chi-square test.
-    - Machine (AI-assisted): the `pivot_longer()` combined chart,, formatting `index.qmd` into the template layout, merging drafts into one file, formatting Panel B, the deprivation groups (`cut_number()`), the age check for ex-smokers, and checking the numbers in both panels.
-- **Limits:** one snapshot each, smoking is yes / no only in A and in loose groups in B, only 36 female smokers in A, age tangled up with smoking in B, `carstair` describes the area not the person, unknown sampling.
-- **Gift for the steal-this strip:** `pivot_longer()` to put two measures side by side in one faceted chart, helper columns with cut-offs stated out loud, and `fct_relevel()` / `fct_recode()` to put categories in a sensible order with readable names.
+    - Panel C: Does life expectancy go up with GDP per capita across Asia? (Roughly yes, but China, India and a few rich countries decide what the maps look like.)
+    - Panel D: Are families closer to the PG&E station sicker, and did they leave more? (Yes in our made-up data: about 71% of families within 0.5 km are affected vs about 42% beyond 1 km, and inside-plume families score about 1.7 points worse on the t-test. That's still not proof the plume caused it.)
+- **What we will not claim:** that smoking is good for cholesterol or the heart, that social class causes CVD, that anything here causes heart disease, that GDP makes people live longer, or that the plume made the Hinkley families sick (the data is made up and has no dates, ages or other causes).
+
+- **Limits:** one snapshot each, smoking is yes / no only in A and in loose groups in B, only 36 female smokers in A, age tangled up with smoking in B, `carstair` describes the area not the person, unknown sampling. In C, country averages hide differences inside a country and a couple of places may drop off the map because their names don't match. In D, the data is made up, "affected" and the plume zones are our own cut-offs, and we only know if a family moved, not why.

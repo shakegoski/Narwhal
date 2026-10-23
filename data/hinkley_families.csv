@@ -1,0 +1,271 @@
+family_id,family,house_no,street,lon,lat,distance_km,in_plume,plume_zone,n_members,n_children,pet,years_in_town,drinks_well_water,cr6_ppb,health_score,illness_level,contacted_by_pge,moved_out
+F001,Jensen,7042,Community Blvd,-117.16169,34.89256,1.22,inside,medium,5,3,cat,14,yes,340.0,8.4,severe,yes,no
+F002,Robinson,8718,Community Blvd,-117.16069,34.88556,2.0,inside,low,4,2,none,9,yes,190.0,4.1,mild,yes,no
+F003,King,5094,Lenwood Rd,-117.16124,34.89971,0.43,inside,high,1,0,cat,20,no,143.4,1.5,none,no,no
+F004,Lewis,6846,Lenwood Rd,-117.16022,34.89462,1.0,inside,medium,1,0,none,21,no,585.0,8.0,severe,yes,yes
+F005,Stewart,3975,Fairview Rd,-117.16295,34.90005,0.39,inside,high,4,2,dog,30,no,142.7,4.4,mild,yes,no
+F006,Morales,2635,Lenwood Rd,-117.16142,34.88546,2.0,inside,low,6,4,none,9,yes,17.3,3.0,mild,no,no
+F007,Sanchez,7804,Hinkley Rd,-117.16111,34.90068,0.33,inside,high,4,1,none,26,yes,124.0,8.9,severe,yes,yes
+F008,Rivera,3498,Hinkley Rd,-117.15993,34.88655,1.89,inside,low,3,1,dog,13,no,19.0,0.0,none,yes,no
+F009,Taylor,1650,Thompson Rd,-117.16408,34.89967,0.46,inside,low,1,0,cat,14,yes,216.0,10.0,severe,no,yes
+F010,Stewart,5367,Thompson Rd,-117.16377,34.89597,0.85,inside,medium,4,1,none,7,yes,59.0,3.7,mild,no,no
+F011,Green,2173,Hinkley Rd,-117.16242,34.88938,1.57,inside,medium,3,1,dog,21,no,55.7,3.4,mild,no,yes
+F012,Stewart,673,Hinkley Rd,-117.16078,34.90252,0.17,inside,medium,2,1,cat,25,no,167.6,4.3,mild,no,no
+F013,Turner,6359,Thompson Rd,-117.16524,34.89061,1.46,inside,low,1,0,cat,43,yes,65.3,5.5,mild,no,no
+F014,Stewart,5934,Fairview Rd,-117.16096,34.88318,2.26,inside,low,1,0,dog,8,yes,15.9,1.6,none,no,no
+F015,Ramirez,6235,Community Blvd,-117.16429,34.89783,0.66,inside,medium,1,0,cat,20,yes,115.5,6.2,severe,yes,yes
+F016,Morales,9431,Thompson Rd,-117.16234,34.88778,1.74,inside,low,1,0,dog,12,yes,22.9,3.3,mild,no,no
+F017,Walker,2627,Thompson Rd,-117.16423,34.89663,0.79,inside,medium,1,0,cat,11,yes,161.3,10.0,severe,no,yes
+F018,Walker,3819,Thompson Rd,-117.16042,34.88196,2.39,inside,low,2,1,none,14,yes,16.5,3.0,mild,yes,yes
+F019,Parker,6456,Mountain View Rd,-117.16226,34.90357,0.01,inside,high,2,1,dog,17,no,219.2,7.9,severe,yes,yes
+F020,Young,7034,Fairview Rd,-117.16469,34.89582,0.89,inside,medium,3,1,horse,34,no,132.0,1.2,none,no,no
+F021,Gomez,8382,Lenwood Rd,-117.16132,34.89864,0.55,inside,high,2,1,horse,16,yes,70.4,5.9,mild,no,no
+F022,Morris,6525,Mountain View Rd,-117.16332,34.89811,0.61,inside,high,2,0,cat,13,yes,115.7,5.3,mild,yes,yes
+F023,Taylor,2278,Thompson Rd,-117.16417,34.89758,0.69,inside,medium,2,0,none,11,no,82.8,2.7,none,yes,no
+F024,Cook,3242,Community Blvd,-117.16094,34.89682,0.75,inside,high,1,0,cat,9,yes,52.1,4.3,mild,yes,no
+F025,Anderson,1838,Thompson Rd,-117.16442,34.88941,1.58,inside,low,2,1,dog,4,yes,15.1,1.2,none,no,no
+F026,Evans,2395,Community Blvd,-117.16155,34.89153,1.33,inside,medium,2,0,dog,11,yes,24.8,3.0,mild,no,no
+F027,Green,7326,Community Blvd,-117.16201,34.89053,1.44,inside,medium,2,0,none,16,yes,35.5,4.5,mild,yes,no
+F028,Martin,8161,Thompson Rd,-117.16162,34.89596,0.84,inside,high,1,0,other,16,yes,162.6,8.8,severe,no,yes
+F029,Parker,9467,Community Blvd,-117.16299,34.89654,0.78,inside,high,4,2,dog,30,yes,105.4,6.9,severe,yes,no
+F030,Moore,9163,Mountain View Rd,-117.16586,34.89076,1.45,inside,low,2,1,dog,21,yes,22.6,2.0,none,yes,no
+F031,Cook,4800,Hinkley Rd,-117.15812,34.8957,0.95,inside,low,1,0,dog,11,no,47.1,1.3,none,yes,no
+F032,White,7233,Mountain View Rd,-117.1631,34.89321,1.15,inside,medium,2,0,none,6,no,21.9,0.6,none,yes,no
+F033,Thompson,964,Thompson Rd,-117.16303,34.88275,2.3,inside,low,2,1,horse,4,no,15.1,1.1,none,no,no
+F034,Adams,798,Community Blvd,-117.16413,34.9007,0.36,inside,low,3,0,cat,6,yes,89.7,5.4,mild,yes,yes
+F035,Taylor,3195,Lenwood Rd,-117.16241,34.89918,0.48,inside,high,1,0,dog,36,yes,141.5,7.9,severe,yes,yes
+F036,Green,4659,Fairview Rd,-117.15963,34.89983,0.47,inside,low,5,2,none,12,yes,56.6,5.0,mild,no,no
+F037,Baker,9755,Thompson Rd,-117.15983,34.88905,1.62,inside,low,2,1,cat,4,yes,48.3,5.1,mild,no,no
+F038,Cruz,2236,Community Blvd,-117.16134,34.89398,1.06,inside,medium,3,0,none,10,no,46.2,2.1,none,no,no
+F039,Clark,2814,Fairview Rd,-117.1612,34.90161,0.23,inside,high,2,0,dog,3,yes,95.0,4.7,mild,yes,no
+F040,Gomez,4425,Mountain View Rd,-117.16101,34.89892,0.52,inside,high,3,0,other,15,yes,128.6,8.7,severe,no,yes
+F041,Stewart,7069,Lenwood Rd,-117.16134,34.88242,2.34,inside,low,2,0,dog,14,yes,19.3,1.0,none,yes,no
+F042,Carter,6926,Lenwood Rd,-117.16063,34.901,0.32,inside,medium,1,0,cat,13,yes,125.1,8.9,severe,yes,yes
+F043,Miller,9493,Hinkley Rd,-117.16402,34.89775,0.66,inside,medium,1,0,cat,15,yes,71.7,5.2,mild,no,no
+F044,Rivera,4619,Fairview Rd,-117.16057,34.89688,0.75,inside,medium,2,0,dog,8,yes,59.5,4.3,mild,yes,yes
+F045,Roberts,9497,Fairview Rd,-117.15882,34.89638,0.85,inside,low,6,3,none,13,yes,51.8,5.0,mild,no,no
+F046,Lewis,3080,Thompson Rd,-117.15901,34.899,0.58,inside,low,2,0,bird,18,no,89.7,4.0,mild,no,yes
+F047,Martin,5761,Lenwood Rd,-117.15965,34.88747,1.79,inside,low,5,1,dog,4,yes,17.3,1.6,none,yes,no
+F048,Sanchez,5379,Community Blvd,-117.16093,34.89925,0.49,inside,high,2,1,none,11,yes,194.4,10.0,severe,yes,yes
+F049,Reyes,3325,Thompson Rd,-117.15868,34.89319,1.19,inside,low,2,1,none,6,yes,83.4,5.8,mild,yes,no
+F050,Lopez,8791,Mountain View Rd,-117.16055,34.90091,0.33,inside,medium,3,0,dog,7,no,98.1,1.1,none,yes,no
+F051,Sanchez,4456,Lenwood Rd,-117.16404,34.88439,2.13,inside,low,5,2,cat,16,yes,12.6,1.9,none,yes,no
+F052,Wilson,7443,Hinkley Rd,-117.1599,34.8999,0.46,inside,medium,2,0,other,28,yes,62.9,7.1,severe,no,yes
+F053,Rogers,5914,Community Blvd,-117.16456,34.89463,1.01,inside,medium,3,0,cat,11,yes,114.6,6.4,severe,no,yes
+F054,Scott,6459,Lenwood Rd,-117.15961,34.88619,1.94,inside,low,2,0,dog,31,yes,23.6,0.6,none,yes,no
+F055,Miller,613,Community Blvd,-117.16249,34.88977,1.53,inside,medium,1,0,cat,9,yes,18.6,2.7,none,yes,no
+F056,Evans,2055,Community Blvd,-117.16296,34.89928,0.48,inside,high,1,0,none,33,yes,98.0,7.2,severe,no,no
+F057,Nguyen,5104,Hinkley Rd,-117.16323,34.89834,0.58,inside,high,5,0,none,9,yes,110.5,6.1,severe,yes,no
+F058,Lee,809,Mountain View Rd,-117.16368,34.88282,2.3,inside,low,2,0,horse,4,no,23.0,3.0,mild,yes,yes
+F059,Ortiz,530,Mountain View Rd,-117.15808,34.89541,0.98,inside,low,2,0,dog,14,no,65.6,2.2,none,yes,no
+F060,Rivera,9427,Mountain View Rd,-117.16025,34.88648,1.9,inside,low,2,0,cat,8,no,16.4,0.0,none,yes,no
+F061,Gomez,2290,Mountain View Rd,-117.16166,34.8896,1.54,inside,medium,1,0,cat,16,yes,65.7,5.3,mild,yes,yes
+F062,White,3136,Hinkley Rd,-117.15959,34.89771,0.69,inside,medium,4,2,cat,15,yes,57.2,6.7,severe,yes,no
+F063,Adams,2716,Community Blvd,-117.16096,34.8998,0.43,inside,high,2,1,cat,14,no,110.6,1.4,none,yes,no
+F064,Young,257,Fairview Rd,-117.16354,34.90282,0.15,inside,low,4,1,none,18,no,251.9,8.2,severe,no,yes
+F065,White,4739,Mountain View Rd,-117.16577,34.89259,1.26,inside,low,1,0,none,55,no,41.5,0.5,none,no,no
+F066,Cruz,9403,Community Blvd,-117.16288,34.88754,1.77,inside,low,1,0,dog,19,no,30.6,2.0,none,yes,no
+F067,Taylor,7003,Mountain View Rd,-117.15994,34.89962,0.48,inside,medium,3,0,none,33,no,118.6,4.3,mild,yes,yes
+F068,Clark,1475,Thompson Rd,-117.16182,34.88265,2.31,inside,low,4,0,dog,9,yes,24.9,2.6,none,yes,no
+F069,Rogers,4820,Community Blvd,-117.16296,34.89892,0.52,inside,high,2,0,cat,3,yes,107.9,8.4,severe,yes,yes
+F070,Allen,7616,Fairview Rd,-117.16176,34.89802,0.61,inside,high,4,0,other,19,no,79.9,0.8,none,yes,no
+F071,White,7292,Thompson Rd,-117.1584,34.89439,1.07,inside,low,2,0,none,2,no,91.7,3.4,mild,yes,yes
+F072,Hill,6681,Hinkley Rd,-117.15788,34.89383,1.15,inside,low,1,0,other,39,yes,94.6,6.2,severe,no,yes
+F073,Reyes,9644,Thompson Rd,-117.16371,34.89253,1.23,inside,medium,3,1,horse,19,yes,27.7,0.2,none,yes,no
+F074,Moore,6516,Lenwood Rd,-117.16427,34.90054,0.38,inside,low,1,0,dog,16,yes,102.9,7.0,severe,no,no
+F075,Collins,3635,Hinkley Rd,-117.16226,34.90029,0.36,inside,high,3,1,dog,19,yes,150.6,9.1,severe,no,yes
+F076,Evans,5238,Hinkley Rd,-117.15939,34.89098,1.41,inside,low,1,0,dog,3,yes,28.4,0.9,none,yes,no
+F077,Harris,3797,Thompson Rd,-117.16272,34.89565,0.88,inside,high,2,0,dog,68,yes,101.3,7.7,severe,no,yes
+F078,Flores,3249,Fairview Rd,-117.1618,34.89345,1.12,inside,medium,1,0,none,14,no,70.8,1.3,none,no,no
+F079,Moore,8575,Community Blvd,-117.16207,34.89336,1.13,inside,medium,2,0,dog,41,no,31.1,0.6,none,yes,no
+F080,Garcia,3180,Community Blvd,-117.16439,34.88908,1.61,inside,low,2,0,cat,16,yes,20.8,3.1,mild,yes,no
+F081,Harris,410,Lenwood Rd,-117.16033,34.90187,0.25,inside,low,1,0,none,15,yes,115.0,7.7,severe,no,no
+F082,Davis,5541,Lenwood Rd,-117.1652,34.89322,1.18,inside,low,1,0,none,12,yes,63.6,3.9,mild,yes,yes
+F083,Walker,8529,Mountain View Rd,-117.1601,34.90091,0.35,inside,low,3,1,none,16,yes,510.0,8.0,severe,yes,yes
+F084,Phillips,6699,Lenwood Rd,-117.16412,34.89347,1.13,inside,medium,4,2,none,23,yes,53.7,5.2,mild,no,no
+F085,Turner,394,Lenwood Rd,-117.15936,34.89356,1.14,inside,medium,2,1,cat,11,yes,420.0,8.0,severe,no,yes
+F086,Rivera,9935,Fairview Rd,-117.15814,34.89134,1.4,inside,low,1,0,dog,15,yes,98.2,5.2,mild,no,no
+F087,Brown,4930,Thompson Rd,-117.1642,34.89875,0.56,inside,low,3,2,dog,8,no,137.1,3.8,mild,yes,no
+F088,Young,7410,Fairview Rd,-117.16311,34.88852,1.67,inside,medium,2,1,dog,17,yes,46.1,5.2,mild,yes,no
+F089,Adams,807,Community Blvd,-117.15975,34.89321,1.17,inside,medium,1,0,none,8,no,28.9,2.6,none,yes,no
+F090,Wilson,1348,Thompson Rd,-117.15953,34.89937,0.52,inside,low,3,1,dog,9,yes,98.1,7.0,severe,yes,yes
+F091,Scott,1644,Fairview Rd,-117.16455,34.89812,0.64,inside,low,4,1,cat,12,yes,76.5,5.6,mild,yes,yes
+F092,Baker,9062,Fairview Rd,-117.16118,34.88702,1.83,inside,low,1,0,none,27,yes,22.0,3.3,mild,no,no
+F093,Wilson,7479,Community Blvd,-117.1624,34.90244,0.13,inside,high,2,0,none,11,yes,160.2,10.0,severe,yes,yes
+F094,King,7287,Community Blvd,-117.15899,34.89322,1.18,inside,low,1,0,cat,14,yes,60.1,4.7,mild,yes,no
+F095,Davis,7310,Fairview Rd,-117.16131,34.90037,0.36,inside,high,2,1,other,16,yes,66.2,4.7,mild,no,yes
+F096,Stewart,9954,Mountain View Rd,-117.16425,34.89384,1.09,inside,medium,2,0,cat,12,yes,95.8,6.2,severe,no,yes
+F097,Lee,5927,Lenwood Rd,-117.162,34.89717,0.71,inside,high,1,0,dog,13,no,79.9,2.9,none,yes,no
+F098,Diaz,9581,Thompson Rd,-117.1619,34.89787,0.63,inside,high,1,0,dog,25,no,77.6,3.1,mild,no,no
+F099,Thompson,9895,Mountain View Rd,-117.16196,34.88917,1.59,inside,medium,2,0,dog,3,yes,25.1,2.8,none,no,no
+F100,Cruz,6723,Hinkley Rd,-117.15765,34.89065,1.49,inside,low,3,1,none,21,yes,41.3,5.4,mild,yes,yes
+F101,Lewis,6165,Lenwood Rd,-117.1629,34.90151,0.24,inside,high,1,0,other,15,no,150.5,4.5,mild,yes,yes
+F102,Ortiz,7095,Hinkley Rd,-117.16241,34.90378,0.03,inside,medium,4,0,dog,17,no,155.6,4.8,mild,no,yes
+F103,Davis,4892,Mountain View Rd,-117.1591,34.88961,1.57,inside,low,3,0,dog,10,yes,42.3,3.1,mild,yes,no
+F104,Parker,9408,Lenwood Rd,-117.1629,34.89989,0.41,inside,high,2,0,none,25,yes,161.7,10.0,severe,yes,yes
+F105,Lopez,4165,Mountain View Rd,-117.15917,34.89917,0.56,inside,low,3,0,dog,26,no,76.3,2.2,none,yes,no
+F106,Miller,1387,Community Blvd,-117.16215,34.90074,0.31,inside,high,4,0,dog,14,yes,294.9,10.0,severe,yes,yes
+F107,Taylor,8158,Thompson Rd,-117.16397,34.90102,0.32,inside,low,2,0,none,8,no,96.6,4.8,mild,yes,no
+F108,Taylor,3089,Community Blvd,-117.1633,34.89374,1.09,inside,medium,2,0,dog,17,yes,47.2,6.0,severe,no,no
+F109,Edwards,7690,Thompson Rd,-117.16359,34.89661,0.78,inside,medium,3,1,dog,23,no,68.1,3.2,mild,no,no
+F110,Wilson,3319,Hinkley Rd,-117.16215,34.89808,0.61,inside,high,1,0,dog,8,no,89.3,2.7,none,yes,yes
+F111,Cook,4075,Hinkley Rd,-117.16119,34.89972,0.43,inside,high,2,1,dog,22,yes,84.5,7.0,severe,yes,yes
+F112,Walker,3740,Lenwood Rd,-117.16288,34.89326,1.14,inside,medium,4,0,dog,12,yes,42.3,3.8,mild,yes,yes
+F113,Wilson,698,Hinkley Rd,-117.16392,34.88202,2.39,inside,low,2,1,dog,16,no,14.0,1.7,none,no,no
+F114,Parker,2316,Hinkley Rd,-117.16082,34.88858,1.66,inside,medium,3,1,dog,10,yes,31.3,3.3,mild,no,no
+F115,Collins,7334,Mountain View Rd,-117.16363,34.89736,0.7,inside,high,2,0,dog,33,yes,46.0,5.0,mild,yes,yes
+F116,Diaz,421,Mountain View Rd,-117.15815,34.88288,2.32,outside,outside,5,1,none,10,yes,7.8,3.4,mild,no,yes
+F117,Roberts,1298,Mountain View Rd,-117.15042,34.90123,1.11,outside,outside,2,1,cat,11,no,19.8,1.7,none,no,yes
+F118,Sanchez,9658,Mountain View Rd,-117.17063,34.89636,1.11,outside,outside,3,0,dog,25,no,32.3,5.1,mild,no,no
+F119,Davis,9377,Community Blvd,-117.16854,34.90316,0.58,outside,outside,6,2,cat,7,yes,47.4,4.4,mild,yes,no
+F120,Collins,453,Lenwood Rd,-117.16043,34.90612,0.33,outside,outside,3,1,cat,5,yes,45.2,4.6,mild,no,yes
+F121,Thompson,4570,Lenwood Rd,-117.17463,34.89076,1.81,outside,outside,2,0,dog,7,yes,14.9,2.1,none,no,no
+F122,Hall,1409,Lenwood Rd,-117.16793,34.90134,0.58,outside,outside,4,1,dog,6,no,54.7,4.2,mild,no,yes
+F123,Gomez,336,Lenwood Rd,-117.16493,34.87836,2.8,outside,outside,2,0,horse,21,no,3.4,0.1,none,no,no
+F124,Young,1814,Thompson Rd,-117.15317,34.90343,0.82,outside,outside,2,1,horse,15,yes,29.8,5.1,mild,no,no
+F125,Edwards,2063,Fairview Rd,-117.1567,34.89937,0.68,outside,outside,1,0,dog,6,no,39.0,3.8,mild,no,no
+F126,Taylor,8805,Fairview Rd,-117.15032,34.87908,2.92,outside,outside,3,1,cat,12,no,5.4,6.6,severe,no,yes
+F127,Campbell,7258,Hinkley Rd,-117.15561,34.89412,1.2,outside,outside,1,0,bird,8,yes,17.9,1.5,none,yes,no
+F128,Young,135,Fairview Rd,-117.15442,34.8938,1.29,outside,outside,2,0,dog,8,yes,21.4,2.7,none,yes,no
+F129,White,6319,Hinkley Rd,-117.15092,34.90395,1.03,outside,outside,1,0,none,2,no,31.9,2.4,none,no,no
+F130,Walker,8703,Thompson Rd,-117.1561,34.88462,2.17,outside,outside,1,0,bird,17,yes,6.4,0.3,none,no,no
+F131,Cook,9214,Hinkley Rd,-117.16585,34.89882,0.62,outside,outside,2,1,dog,9,yes,62.0,4.3,mild,no,no
+F132,Stewart,1122,Lenwood Rd,-117.14971,34.88674,2.18,outside,outside,4,2,none,45,no,5.9,2.3,none,yes,no
+F133,Cook,6432,Fairview Rd,-117.15948,34.87866,2.76,outside,outside,5,2,dog,9,no,3.9,7.0,severe,no,yes
+F134,Lopez,9151,Mountain View Rd,-117.15319,34.89469,1.28,outside,outside,1,0,dog,5,yes,13.7,1.0,none,no,no
+F135,Cook,9148,Mountain View Rd,-117.15779,34.90614,0.49,outside,outside,2,1,cat,2,yes,40.1,2.0,none,no,no
+F136,Ramirez,6251,Community Blvd,-117.15197,34.90218,0.95,outside,outside,2,1,dog,32,no,19.4,2.9,none,no,no
+F137,Perez,5023,Community Blvd,-117.14873,34.90392,1.23,outside,outside,3,0,dog,9,yes,49.5,4.0,mild,no,no
+F138,Lee,5263,Fairview Rd,-117.16591,34.90391,0.34,outside,outside,5,0,none,9,no,42.0,1.5,none,no,no
+F139,Lewis,7396,Mountain View Rd,-117.14913,34.89619,1.44,outside,outside,2,0,bird,14,yes,20.7,2.5,none,no,yes
+F140,Campbell,5894,Fairview Rd,-117.17506,34.89661,1.4,outside,outside,1,0,none,22,no,23.4,2.3,none,no,no
+F141,Thompson,9959,Lenwood Rd,-117.14856,34.89631,1.48,outside,outside,3,2,none,7,yes,13.9,0.8,none,no,no
+F142,Carter,3070,Fairview Rd,-117.17694,34.89702,1.53,outside,outside,1,0,none,26,no,12.0,1.1,none,no,yes
+F143,Nelson,4446,Hinkley Rd,-117.17471,34.9016,1.16,outside,outside,2,0,dog,6,yes,32.8,3.0,mild,no,no
+F144,Jackson,4438,Hinkley Rd,-117.17304,34.89844,1.14,outside,outside,2,1,cat,22,yes,19.6,1.8,none,no,no
+F145,Lopez,9629,Lenwood Rd,-117.15581,34.89912,0.76,outside,outside,1,0,dog,6,no,51.9,3.5,mild,no,no
+F146,Hill,6602,Hinkley Rd,-117.15715,34.88599,2.0,outside,outside,4,3,horse,8,no,8.1,1.7,none,no,no
+F147,Phillips,4100,Mountain View Rd,-117.17172,34.8981,1.06,outside,outside,3,1,cat,24,yes,28.3,4.4,mild,no,no
+F148,Stewart,9566,Fairview Rd,-117.16778,34.903,0.51,outside,outside,2,0,dog,10,yes,48.3,6.2,severe,no,yes
+F149,Lewis,2948,Mountain View Rd,-117.15043,34.90372,1.07,outside,outside,3,0,none,39,no,33.6,5.3,mild,no,no
+F150,Rogers,7015,Mountain View Rd,-117.15876,34.90199,0.36,outside,outside,1,0,dog,9,no,60.8,2.0,none,no,no
+F151,Thompson,7286,Community Blvd,-117.16443,34.90644,0.38,outside,outside,2,0,dog,16,no,23.9,1.1,none,no,yes
+F152,Reyes,2039,Lenwood Rd,-117.16612,34.90671,0.5,outside,outside,5,0,cat,7,yes,63.1,2.8,none,no,no
+F153,Murphy,8780,Mountain View Rd,-117.16467,34.90392,0.23,outside,outside,1,0,none,6,no,81.4,1.4,none,no,no
+F154,Anderson,2133,Thompson Rd,-117.17471,34.8918,1.73,outside,outside,2,0,dog,7,no,8.7,0.7,none,no,yes
+F155,Edwards,5741,Fairview Rd,-117.14866,34.89619,1.48,outside,outside,3,0,none,23,yes,11.8,2.5,none,no,no
+F156,Hall,2632,Fairview Rd,-117.15834,34.90324,0.35,outside,outside,2,0,none,20,no,57.4,1.6,none,no,yes
+F157,Cook,4150,Fairview Rd,-117.14888,34.89445,1.58,outside,outside,4,1,none,21,no,17.1,3.6,mild,yes,yes
+F158,Collins,3800,Fairview Rd,-117.17594,34.90229,1.26,outside,outside,1,0,cat,8,yes,14.6,2.1,none,no,no
+F159,Walker,6819,Hinkley Rd,-117.15626,34.89985,0.68,outside,outside,3,1,other,8,yes,50.3,5.6,mild,no,no
+F160,Jackson,5199,Hinkley Rd,-117.17391,34.90388,1.07,outside,outside,4,0,other,14,no,19.9,2.1,none,no,no
+F161,Thompson,3175,Thompson Rd,-117.15457,34.8876,1.9,outside,outside,1,0,none,9,yes,8.2,3.3,mild,no,no
+F162,Rivera,8447,Community Blvd,-117.16498,34.90326,0.26,outside,outside,2,0,none,13,no,51.7,2.4,none,yes,no
+F163,Wilson,4367,Hinkley Rd,-117.17498,34.89218,1.72,outside,outside,2,1,horse,9,yes,7.8,1.3,none,no,no
+F164,Lewis,1095,Fairview Rd,-117.16981,34.88086,2.6,outside,outside,5,1,none,17,yes,4.1,2.6,none,no,no
+F165,Stewart,5193,Fairview Rd,-117.17634,34.89304,1.74,outside,outside,3,1,none,24,yes,7.5,1.6,none,no,no
+F166,Anderson,9573,Hinkley Rd,-117.15716,34.88834,1.74,outside,outside,3,0,none,7,no,13.1,0.6,none,no,yes
+F167,White,9264,Thompson Rd,-117.15206,34.89291,1.5,outside,outside,3,1,none,49,no,16.1,2.5,none,no,no
+F168,Evans,2229,Community Blvd,-117.17141,34.87978,2.76,outside,outside,1,0,dog,9,yes,5.0,0.8,none,no,no
+F169,White,1652,Fairview Rd,-117.16594,34.90618,0.45,outside,outside,3,2,cat,7,no,74.4,3.0,mild,no,no
+F170,Brown,984,Lenwood Rd,-117.15707,34.90267,0.48,outside,outside,2,0,horse,27,no,69.5,4.4,mild,no,yes
+F171,Cook,8160,Fairview Rd,-117.17169,34.88141,2.6,outside,outside,1,0,dog,9,yes,5.9,2.5,none,no,no
+F172,Miller,5629,Hinkley Rd,-117.15216,34.88478,2.27,outside,outside,3,1,none,37,no,4.6,4.1,mild,yes,no
+F173,Thompson,5307,Community Blvd,-117.15952,34.90434,0.26,outside,outside,1,0,dog,41,yes,46.1,6.1,severe,no,no
+F174,Gomez,6352,Lenwood Rd,-117.17522,34.89317,1.65,outside,outside,1,0,cat,9,no,9.6,1.1,none,no,no
+F175,Garcia,8356,Community Blvd,-117.16935,34.90457,0.66,outside,outside,2,0,cat,14,yes,21.1,2.9,none,no,no
+F176,Clark,2059,Mountain View Rd,-117.16641,34.89226,1.31,outside,outside,1,0,none,1,yes,15.5,1.2,none,no,no
+F177,King,7739,Thompson Rd,-117.16609,34.90422,0.36,outside,outside,1,0,dog,13,yes,66.1,6.9,severe,no,yes
+F178,Campbell,6136,Fairview Rd,-117.15257,34.90148,0.91,outside,outside,1,0,none,33,no,30.6,3.8,mild,no,no
+F179,Lopez,5497,Thompson Rd,-117.15916,34.89988,0.49,outside,outside,2,1,bird,8,no,27.4,1.6,none,no,no
+F180,Hall,496,Lenwood Rd,-117.15542,34.90058,0.7,outside,outside,4,1,dog,4,no,30.1,1.0,none,no,yes
+F181,Martin,8578,Lenwood Rd,-117.1497,34.90245,1.15,outside,outside,3,2,dog,5,yes,20.9,3.2,mild,no,no
+F182,Roberts,8411,Thompson Rd,-117.16744,34.90336,0.48,outside,outside,2,1,dog,29,yes,27.8,2.0,none,no,no
+F183,Hill,383,Mountain View Rd,-117.15513,34.89725,0.95,outside,outside,1,0,none,7,no,34.0,1.7,none,no,no
+F184,Ramirez,4271,Thompson Rd,-117.14976,34.90532,1.15,outside,outside,3,0,bird,14,no,28.4,2.0,none,no,no
+F185,Diaz,6445,Thompson Rd,-117.15893,34.90175,0.36,outside,outside,3,0,cat,22,no,48.7,2.8,none,no,yes
+F186,Green,3278,Lenwood Rd,-117.17458,34.88648,2.2,outside,outside,2,0,dog,15,yes,10.5,0.8,none,no,no
+F187,Wright,506,Community Blvd,-117.16815,34.88529,2.09,outside,outside,2,1,cat,18,no,5.7,1.6,none,no,no
+F188,Cook,7450,Mountain View Rd,-117.16614,34.88559,2.02,outside,outside,2,0,dog,1,no,8.2,1.2,none,no,no
+F189,Cook,1270,Fairview Rd,-117.17176,34.90322,0.87,outside,outside,5,1,other,13,yes,21.5,2.7,none,yes,yes
+F190,Nelson,3407,Thompson Rd,-117.16879,34.89318,1.3,outside,outside,1,0,none,21,no,13.6,3.1,mild,no,no
+F191,Nelson,5233,Mountain View Rd,-117.15429,34.88169,2.52,outside,outside,2,0,none,13,no,5.6,8.9,severe,no,yes
+F192,Sanchez,5367,Fairview Rd,-117.15992,34.90351,0.21,outside,outside,4,3,dog,10,yes,99.0,4.6,mild,no,no
+F193,Evans,7899,Hinkley Rd,-117.15592,34.90198,0.6,outside,outside,4,3,dog,9,yes,45.5,5.2,mild,no,no
+F194,Carter,5350,Mountain View Rd,-117.16639,34.90087,0.49,outside,outside,2,1,cat,26,yes,63.3,6.3,severe,yes,yes
+F195,Reyes,8950,Lenwood Rd,-117.14859,34.8874,2.18,outside,outside,3,1,horse,20,no,4.6,2.9,none,no,no
+F196,Lee,4323,Lenwood Rd,-117.16458,34.90632,0.38,outside,outside,1,0,other,74,no,56.0,0.0,none,no,no
+F197,Nelson,6102,Community Blvd,-117.16942,34.89415,1.23,outside,outside,1,0,dog,10,no,20.8,1.2,none,no,no
+F198,Rogers,5210,Lenwood Rd,-117.15124,34.88546,2.24,outside,outside,5,1,cat,7,no,8.3,0.7,none,no,no
+F199,Cook,7150,Community Blvd,-117.15389,34.89612,1.12,outside,outside,1,0,none,17,yes,31.9,2.7,none,yes,no
+F200,Lee,7591,Hinkley Rd,-117.15327,34.8968,1.11,outside,outside,1,0,none,52,no,28.5,2.2,none,no,no
+F201,Garcia,2991,Thompson Rd,-117.1523,34.88269,2.48,outside,outside,4,1,cat,31,yes,6.4,8.6,severe,yes,yes
+F202,Morris,1888,Thompson Rd,-117.17154,34.8933,1.42,outside,outside,1,0,dog,27,no,14.3,0.0,none,no,no
+F203,Wright,8535,Thompson Rd,-117.15062,34.89345,1.54,outside,outside,2,0,dog,11,no,7.0,1.4,none,yes,no
+F204,Edwards,9870,Fairview Rd,-117.15228,34.89916,1.03,outside,outside,3,0,dog,15,yes,19.9,3.1,mild,no,no
+F205,Wilson,9550,Hinkley Rd,-117.14894,34.89355,1.64,outside,outside,1,0,none,32,yes,9.9,3.3,mild,no,no
+F206,Nguyen,1559,Fairview Rd,-117.15334,34.9029,0.81,outside,outside,1,0,dog,27,no,49.9,2.2,none,no,no
+F207,Anderson,5036,Hinkley Rd,-117.17258,34.90378,0.95,outside,outside,2,1,dog,20,no,41.9,2.1,none,no,no
+F208,Perez,1427,Lenwood Rd,-117.1669,34.89479,1.06,outside,outside,3,1,cat,9,no,19.0,0.0,none,no,no
+F209,Harris,4018,Mountain View Rd,-117.17067,34.90676,0.85,outside,outside,4,1,none,3,yes,22.5,3.1,mild,no,no
+F210,Ramirez,6355,Thompson Rd,-117.16921,34.90597,0.69,outside,outside,1,0,cat,12,no,26.5,1.9,none,no,no
+F211,Evans,6015,Hinkley Rd,-117.15262,34.89502,1.29,outside,outside,4,0,dog,8,yes,17.5,1.1,none,no,no
+F212,Collins,8292,Fairview Rd,-117.15665,34.90175,0.54,outside,outside,2,1,other,7,no,35.9,0.4,none,no,no
+F213,Ramirez,2571,Thompson Rd,-117.15738,34.88382,2.23,outside,outside,2,0,none,9,yes,8.5,7.8,severe,no,yes
+F214,Gomez,184,Mountain View Rd,-117.17112,34.8881,1.89,outside,outside,1,0,none,12,no,4.6,3.3,mild,no,no
+F215,Stewart,9144,Lenwood Rd,-117.1699,34.89989,0.81,outside,outside,1,0,none,18,no,19.3,2.3,none,no,no
+F216,Garcia,8735,Fairview Rd,-117.17562,34.90562,1.25,outside,outside,1,0,dog,19,yes,29.4,4.2,mild,no,yes
+F217,Carter,5394,Community Blvd,-117.15516,34.90669,0.73,outside,outside,2,1,dog,3,no,39.6,2.4,none,no,yes
+F218,Baker,229,Thompson Rd,-117.17674,34.89885,1.43,outside,outside,2,0,cat,10,no,24.6,1.6,none,no,no
+F219,Walker,3086,Lenwood Rd,-117.16797,34.88466,2.16,outside,outside,1,0,cat,7,yes,5.0,1.8,none,no,no
+F220,Scott,7422,Lenwood Rd,-117.17504,34.89126,1.8,outside,outside,3,1,none,22,yes,9.1,0.7,none,no,no
+F221,Clark,2862,Community Blvd,-117.15247,34.88237,2.51,outside,outside,3,2,none,30,yes,4.4,2.2,none,no,no
+F222,Rogers,2830,Lenwood Rd,-117.15493,34.90561,0.7,outside,outside,3,0,none,7,yes,66.8,6.6,severe,no,no
+F223,Garcia,4117,Thompson Rd,-117.15534,34.90698,0.73,outside,outside,3,0,bird,15,yes,41.8,4.9,mild,no,yes
+F224,Gomez,4851,Hinkley Rd,-117.15205,34.89628,1.23,outside,outside,1,0,none,6,yes,23.0,2.3,none,no,yes
+F225,Murphy,7416,Fairview Rd,-117.17424,34.90505,1.11,outside,outside,1,0,horse,43,yes,21.3,0.0,none,no,no
+F226,Wright,253,Mountain View Rd,-117.17107,34.87726,3.02,outside,outside,3,0,cat,6,no,2.9,0.0,none,no,no
+F227,Reyes,279,Hinkley Rd,-117.16161,34.90561,0.23,outside,outside,2,0,dog,28,yes,70.9,4.9,mild,no,no
+F228,Diaz,1991,Lenwood Rd,-117.14909,34.89356,1.63,outside,outside,1,0,dog,16,no,10.2,2.8,none,no,no
+F229,Young,7380,Mountain View Rd,-117.15694,34.90138,0.54,outside,outside,2,1,bird,13,yes,54.2,5.6,mild,no,yes
+F230,Miller,8904,Lenwood Rd,-117.16799,34.90578,0.58,outside,outside,1,0,bird,19,no,38.7,2.5,none,no,no
+F231,Morales,4624,Hinkley Rd,-117.16658,34.89369,1.16,outside,outside,5,2,none,14,yes,10.1,1.7,none,no,no
+F232,Ortiz,4431,Hinkley Rd,-117.15019,34.88816,2.02,outside,outside,2,0,dog,17,yes,5.8,2.5,none,no,no
+F233,White,4268,Mountain View Rd,-117.16672,34.90362,0.41,outside,outside,2,0,dog,33,no,54.3,4.4,mild,no,no
+F234,Martinez,1858,Hinkley Rd,-117.15606,34.89523,1.08,outside,outside,2,1,dog,19,no,47.7,5.1,mild,no,no
+F235,Wright,8539,Community Blvd,-117.16974,34.90675,0.77,outside,outside,2,0,none,49,no,30.4,1.3,none,no,no
+F236,Phillips,7225,Hinkley Rd,-117.17604,34.8848,2.43,outside,outside,2,0,cat,19,yes,4.6,1.0,none,no,no
+F237,Collins,8532,Thompson Rd,-117.17769,34.88831,2.2,outside,outside,3,0,dog,7,no,6.1,3.8,mild,yes,no
+F238,Evans,4092,Hinkley Rd,-117.15779,34.89921,0.63,outside,outside,1,0,none,8,no,37.2,2.2,none,no,yes
+F239,Allen,9745,Hinkley Rd,-117.15884,34.90199,0.35,outside,outside,2,0,dog,30,no,41.0,3.4,mild,no,no
+F240,Martin,6506,Mountain View Rd,-117.15335,34.90569,0.84,outside,outside,5,1,horse,12,yes,36.5,4.9,mild,yes,no
+F241,Allen,9411,Thompson Rd,-117.17601,34.8915,1.84,outside,outside,2,0,horse,11,yes,6.3,0.0,none,no,no
+F242,Scott,6717,Fairview Rd,-117.16509,34.90445,0.28,outside,outside,3,0,dog,20,no,55.6,3.2,mild,no,no
+F243,Collins,1853,Thompson Rd,-117.16868,34.90308,0.59,outside,outside,6,1,dog,5,yes,31.1,3.4,mild,no,yes
+F244,Rivera,8399,Community Blvd,-117.1716,34.89365,1.39,outside,outside,2,1,none,13,no,14.1,3.0,mild,no,no
+F245,Nguyen,6600,Community Blvd,-117.16573,34.88341,2.25,outside,outside,6,1,none,24,yes,4.3,7.6,severe,no,yes
+F246,Phillips,9698,Hinkley Rd,-117.1532,34.89163,1.55,outside,outside,2,1,cat,26,yes,27.7,4.3,mild,no,no
+F247,Lee,3421,Mountain View Rd,-117.1774,34.89708,1.56,outside,outside,5,1,none,50,yes,16.8,4.5,mild,no,yes
+F248,Stewart,9629,Thompson Rd,-117.14922,34.89446,1.55,outside,outside,2,0,none,16,no,10.0,2.3,none,no,no
+F249,Morales,5824,Hinkley Rd,-117.15645,34.88267,2.37,outside,outside,5,1,none,23,yes,4.8,3.1,mild,no,no
+F250,Wilson,1819,Thompson Rd,-117.15096,34.88225,2.57,outside,outside,4,2,dog,20,no,4.2,7.8,severe,no,no
+F251,Perez,8698,Community Blvd,-117.16693,34.8922,1.33,outside,outside,6,2,bird,20,yes,10.5,1.2,none,no,no
+F252,Gomez,5557,Community Blvd,-117.15777,34.88025,2.61,outside,outside,2,0,cat,14,no,9.8,8.9,severe,no,yes
+F253,Green,1307,Hinkley Rd,-117.15571,34.90375,0.59,outside,outside,5,2,dog,1,no,28.6,1.2,none,no,no
+F254,Davis,6553,Thompson Rd,-117.15061,34.89581,1.36,outside,outside,3,0,none,4,yes,25.2,4.1,mild,no,no
+F255,Martin,9379,Thompson Rd,-117.15822,34.9,0.54,outside,outside,2,1,dog,6,no,49.3,3.3,mild,no,no
+F256,Sanchez,5956,Hinkley Rd,-117.16788,34.90246,0.53,outside,outside,5,1,dog,26,no,27.4,0.0,none,no,no
+F257,Green,6777,Fairview Rd,-117.15923,34.90459,0.29,outside,outside,1,0,cat,9,no,78.8,2.7,none,no,yes
+F258,White,4841,Lenwood Rd,-117.16455,34.90072,0.38,outside,outside,2,0,none,5,no,61.7,3.4,mild,no,yes
+F259,Thompson,7958,Thompson Rd,-117.16538,34.90598,0.4,outside,outside,4,0,horse,18,yes,49.7,3.5,mild,no,no
+F260,Nelson,4089,Mountain View Rd,-117.14897,34.8977,1.37,outside,outside,1,0,horse,10,no,16.0,2.7,none,no,no
+F261,Moore,8142,Thompson Rd,-117.17101,34.89849,0.98,outside,outside,1,0,none,4,yes,39.9,2.0,none,no,no
+F262,Hill,6021,Fairview Rd,-117.15903,34.90699,0.48,outside,outside,1,0,none,4,yes,34.1,3.0,mild,no,yes
+F263,Ortiz,1223,Community Blvd,-117.17322,34.90175,1.03,outside,outside,3,0,dog,6,no,12.6,0.0,none,no,no
+F264,Taylor,9297,Hinkley Rd,-117.17771,34.90198,1.43,outside,outside,2,0,none,15,no,11.4,0.9,none,no,no
+F265,Carter,2192,Thompson Rd,-117.17617,34.89578,1.54,outside,outside,1,0,cat,12,no,12.2,3.7,mild,yes,yes
+F266,Miller,7495,Lenwood Rd,-117.16557,34.90536,0.37,outside,outside,1,0,dog,24,no,56.6,1.2,none,no,no
+F267,Green,8379,Thompson Rd,-117.154,34.9059,0.79,outside,outside,2,0,none,52,no,38.5,3.2,mild,no,no
+F268,Patel,2928,Fairview Rd,-117.17406,34.89077,1.78,outside,outside,1,0,none,4,yes,12.2,2.7,none,no,no
+F269,Nelson,5762,Community Blvd,-117.15859,34.90681,0.49,outside,outside,6,1,none,23,yes,54.2,5.9,mild,no,no
+F270,Perez,3555,Hinkley Rd,-117.15014,34.89628,1.36,outside,outside,1,0,other,20,yes,12.2,2.1,none,no,no
